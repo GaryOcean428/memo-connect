@@ -12,16 +12,21 @@ import { ReferralsGrid } from "@/components/referrals/ReferralsGrid";
 import { ReferralsList } from "@/components/referrals/ReferralsList";
 import { ReferralDetails } from "@/components/referrals/ReferralDetails";
 import { AddReferralForm } from "@/components/referrals/AddReferralForm";
-import { sampleReferrals } from "@/data/referrals";
+import { useReferrals } from "@/hooks/use-referrals";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 const Referrals = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedReferral, setSelectedReferral] = useState<Referral | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  
+  const { referrals, isLoading, error } = useReferrals();
 
   // Filter referrals based on search query and status
-  const filteredReferrals = sampleReferrals.filter(referral => {
+  const filteredReferrals = referrals.filter(referral => {
     const matchesSearch = referral.clientName.toLowerCase().includes(searchQuery.toLowerCase()) || 
                          referral.source.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "all" || referral.status === statusFilter;
@@ -34,6 +39,60 @@ const Referrals = () => {
 
   const handleSelectReferral = (referral: Referral) => {
     setSelectedReferral(referral);
+  };
+
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="space-y-4">
+          <Skeleton className="h-[200px] w-full rounded-xl" />
+          <Skeleton className="h-[200px] w-full rounded-xl" />
+          <Skeleton className="h-[200px] w-full rounded-xl" />
+        </div>
+      );
+    }
+
+    if (error) {
+      return (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>
+            {error}
+          </AlertDescription>
+        </Alert>
+      );
+    }
+
+    return (
+      <Tabs defaultValue="grid" className="mb-6">
+        <div className="flex justify-between items-center">
+          <TabsList>
+            <TabsTrigger value="grid">Grid View</TabsTrigger>
+            <TabsTrigger value="list">List View</TabsTrigger>
+          </TabsList>
+          <div className="text-sm text-muted-foreground">
+            Showing {filteredReferrals.length} referrals
+          </div>
+        </div>
+        
+        {/* Grid View */}
+        <TabsContent value="grid" className="mt-6">
+          <ReferralsGrid 
+            referrals={filteredReferrals}
+            onSelectReferral={handleSelectReferral}
+          />
+        </TabsContent>
+        
+        {/* List View */}
+        <TabsContent value="list" className="mt-6">
+          <ReferralsList 
+            referrals={filteredReferrals}
+            onSelectReferral={handleSelectReferral}
+          />
+        </TabsContent>
+      </Tabs>
+    );
   };
 
   return (
@@ -54,34 +113,7 @@ const Referrals = () => {
             setStatusFilter={setStatusFilter}
           />
 
-          {/* Tabs */}
-          <Tabs defaultValue="grid" className="mb-6">
-            <div className="flex justify-between items-center">
-              <TabsList>
-                <TabsTrigger value="grid">Grid View</TabsTrigger>
-                <TabsTrigger value="list">List View</TabsTrigger>
-              </TabsList>
-              <div className="text-sm text-muted-foreground">
-                Showing {filteredReferrals.length} referrals
-              </div>
-            </div>
-            
-            {/* Grid View */}
-            <TabsContent value="grid" className="mt-6">
-              <ReferralsGrid 
-                referrals={filteredReferrals}
-                onSelectReferral={handleSelectReferral}
-              />
-            </TabsContent>
-            
-            {/* List View */}
-            <TabsContent value="list" className="mt-6">
-              <ReferralsList 
-                referrals={filteredReferrals}
-                onSelectReferral={handleSelectReferral}
-              />
-            </TabsContent>
-          </Tabs>
+          {renderContent()}
         </div>
       </main>
       
