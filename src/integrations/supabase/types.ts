@@ -44,40 +44,82 @@ export type Database = {
       }
       Customer: {
         Row: {
+          apprentice_capacity: number | null
           company: string | null
           created_at: string
           created_by: string
           email: string | null
+          equipment_provided: string[] | null
           id: string
           name: string
           notes: string | null
           phone: string | null
+          previous_apprentice_count: number | null
+          professional_indemnity_expiry: string | null
+          professional_indemnity_insurance: string | null
+          public_liability_expiry: string | null
+          public_liability_insurance: string | null
+          suitable_for_first_years: boolean | null
+          supervision_ratio: string | null
+          supervisor_qualifications: Json | null
           updated_at: string
           updated_by: string
+          work_cover_expiry_date: string | null
+          work_cover_policy_number: string | null
+          workplace_health_safety_policy: boolean | null
+          workplace_induction_process: string | null
         }
         Insert: {
+          apprentice_capacity?: number | null
           company?: string | null
           created_at?: string
           created_by: string
           email?: string | null
+          equipment_provided?: string[] | null
           id: string
           name: string
           notes?: string | null
           phone?: string | null
+          previous_apprentice_count?: number | null
+          professional_indemnity_expiry?: string | null
+          professional_indemnity_insurance?: string | null
+          public_liability_expiry?: string | null
+          public_liability_insurance?: string | null
+          suitable_for_first_years?: boolean | null
+          supervision_ratio?: string | null
+          supervisor_qualifications?: Json | null
           updated_at: string
           updated_by: string
+          work_cover_expiry_date?: string | null
+          work_cover_policy_number?: string | null
+          workplace_health_safety_policy?: boolean | null
+          workplace_induction_process?: string | null
         }
         Update: {
+          apprentice_capacity?: number | null
           company?: string | null
           created_at?: string
           created_by?: string
           email?: string | null
+          equipment_provided?: string[] | null
           id?: string
           name?: string
           notes?: string | null
           phone?: string | null
+          previous_apprentice_count?: number | null
+          professional_indemnity_expiry?: string | null
+          professional_indemnity_insurance?: string | null
+          public_liability_expiry?: string | null
+          public_liability_insurance?: string | null
+          suitable_for_first_years?: boolean | null
+          supervision_ratio?: string | null
+          supervisor_qualifications?: Json | null
           updated_at?: string
           updated_by?: string
+          work_cover_expiry_date?: string | null
+          work_cover_policy_number?: string | null
+          workplace_health_safety_policy?: boolean | null
+          workplace_induction_process?: string | null
         }
         Relationships: []
       }
@@ -187,36 +229,63 @@ export type Database = {
         Row: {
           certLevel: string | null
           code: string
+          core_units_count: number | null
           created_at: string
+          delivery_mode: string | null
           description: string | null
+          elective_units_count: number | null
           id: string
+          industry_demand_rating: number | null
           isActive: boolean
+          license_requirements: string[] | null
           name: string
           nationalCode: string | null
+          nominal_hours: number | null
+          qualification_level: string | null
+          qualification_url: string | null
+          regulatory_requirements: string[] | null
           trainingPackage: string | null
           updated_at: string
         }
         Insert: {
           certLevel?: string | null
           code: string
+          core_units_count?: number | null
           created_at?: string
+          delivery_mode?: string | null
           description?: string | null
+          elective_units_count?: number | null
           id?: string
+          industry_demand_rating?: number | null
           isActive?: boolean
+          license_requirements?: string[] | null
           name: string
           nationalCode?: string | null
+          nominal_hours?: number | null
+          qualification_level?: string | null
+          qualification_url?: string | null
+          regulatory_requirements?: string[] | null
           trainingPackage?: string | null
           updated_at?: string
         }
         Update: {
           certLevel?: string | null
           code?: string
+          core_units_count?: number | null
           created_at?: string
+          delivery_mode?: string | null
           description?: string | null
+          elective_units_count?: number | null
           id?: string
+          industry_demand_rating?: number | null
           isActive?: boolean
+          license_requirements?: string[] | null
           name?: string
           nationalCode?: string | null
+          nominal_hours?: number | null
+          qualification_level?: string | null
+          qualification_url?: string | null
+          regulatory_requirements?: string[] | null
           trainingPackage?: string | null
           updated_at?: string
         }
@@ -224,53 +293,95 @@ export type Database = {
       }
       TrainingContract: {
         Row: {
+          contract_identifier: string | null
           created_at: string
           eligibleForFunding: boolean
           expiryDate: string
+          federal_funded: boolean | null
+          fee_payment_schedule: Json | null
+          funding_source_details: string | null
           hoursPerWeek: number
           id: string
           isCustodial: boolean
           isExistingWorker: boolean
           isSchoolBased: boolean
+          mentorship_details: Json | null
+          nomination_number: string | null
+          probation_completion_confirmed: boolean | null
           qualificationId: string | null
+          required_resources: string[] | null
           startDate: string
+          state_funded: boolean | null
+          state_training_authority: string | null
           status: string
           termMonths: number
+          training_fee: number | null
+          training_plan_approval_date: string | null
+          training_plan_approved: boolean | null
           updated_at: string
+          variation_history: Json | null
           worksite: string | null
           worksiteAddress: string | null
         }
         Insert: {
+          contract_identifier?: string | null
           created_at?: string
           eligibleForFunding: boolean
           expiryDate: string
+          federal_funded?: boolean | null
+          fee_payment_schedule?: Json | null
+          funding_source_details?: string | null
           hoursPerWeek: number
           id?: string
           isCustodial: boolean
           isExistingWorker: boolean
           isSchoolBased: boolean
+          mentorship_details?: Json | null
+          nomination_number?: string | null
+          probation_completion_confirmed?: boolean | null
           qualificationId?: string | null
+          required_resources?: string[] | null
           startDate: string
+          state_funded?: boolean | null
+          state_training_authority?: string | null
           status: string
           termMonths: number
+          training_fee?: number | null
+          training_plan_approval_date?: string | null
+          training_plan_approved?: boolean | null
           updated_at?: string
+          variation_history?: Json | null
           worksite?: string | null
           worksiteAddress?: string | null
         }
         Update: {
+          contract_identifier?: string | null
           created_at?: string
           eligibleForFunding?: boolean
           expiryDate?: string
+          federal_funded?: boolean | null
+          fee_payment_schedule?: Json | null
+          funding_source_details?: string | null
           hoursPerWeek?: number
           id?: string
           isCustodial?: boolean
           isExistingWorker?: boolean
           isSchoolBased?: boolean
+          mentorship_details?: Json | null
+          nomination_number?: string | null
+          probation_completion_confirmed?: boolean | null
           qualificationId?: string | null
+          required_resources?: string[] | null
           startDate?: string
+          state_funded?: boolean | null
+          state_training_authority?: string | null
           status?: string
           termMonths?: number
+          training_fee?: number | null
+          training_plan_approval_date?: string | null
+          training_plan_approved?: boolean | null
           updated_at?: string
+          variation_history?: Json | null
           worksite?: string | null
           worksiteAddress?: string | null
         }
@@ -286,25 +397,64 @@ export type Database = {
       }
       User: {
         Row: {
+          blue_card_expiry: string | null
+          blue_card_number: string | null
           created_at: string
+          disability_details: string | null
           email: string
+          employment_history: Json | null
+          english_proficiency: string | null
+          funding_eligibility: Json | null
           id: string
           name: string | null
+          numeracy_level: string | null
+          preferred_industry: string[] | null
+          prior_qualifications: string[] | null
+          relocation_willing: boolean | null
+          support_requirements: string | null
           updated_at: string
+          visa_expiry: string | null
+          visa_status: string | null
         }
         Insert: {
+          blue_card_expiry?: string | null
+          blue_card_number?: string | null
           created_at?: string
+          disability_details?: string | null
           email: string
+          employment_history?: Json | null
+          english_proficiency?: string | null
+          funding_eligibility?: Json | null
           id: string
           name?: string | null
+          numeracy_level?: string | null
+          preferred_industry?: string[] | null
+          prior_qualifications?: string[] | null
+          relocation_willing?: boolean | null
+          support_requirements?: string | null
           updated_at: string
+          visa_expiry?: string | null
+          visa_status?: string | null
         }
         Update: {
+          blue_card_expiry?: string | null
+          blue_card_number?: string | null
           created_at?: string
+          disability_details?: string | null
           email?: string
+          employment_history?: Json | null
+          english_proficiency?: string | null
+          funding_eligibility?: Json | null
           id?: string
           name?: string | null
+          numeracy_level?: string | null
+          preferred_industry?: string[] | null
+          prior_qualifications?: string[] | null
+          relocation_willing?: boolean | null
+          support_requirements?: string | null
           updated_at?: string
+          visa_expiry?: string | null
+          visa_status?: string | null
         }
         Relationships: []
       }

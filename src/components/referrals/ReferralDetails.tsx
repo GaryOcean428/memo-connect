@@ -4,8 +4,11 @@ import { Referral } from "./ReferralCard";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useReferrals } from "@/hooks/use-referrals";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
@@ -15,35 +18,49 @@ interface ReferralDetailsProps {
   onClose: () => void;
 }
 
+// Define Zod schema for form validation
+const referralFormSchema = z.object({
+  clientName: z.string().min(1, "Client name is required"),
+  source: z.string().min(1, "Referral source is required"),
+  value: z.string().optional(),
+  status: z.enum(["new", "contacted", "in-progress", "completed", "lost"]),
+  notes: z.string().optional(),
+});
+
+type ReferralFormValues = z.infer<typeof referralFormSchema>;
+
 export const ReferralDetails: React.FC<ReferralDetailsProps> = ({ referral, onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [clientName, setClientName] = useState(referral.clientName);
-  const [source, setSource] = useState(referral.source);
-  const [status, setStatus] = useState(referral.status);
-  const [value, setValue] = useState(referral.value?.toString() || "");
-  const [notes, setNotes] = useState(referral.notes || "");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
   const { updateReferral, deleteReferral } = useReferrals();
+  
+  // Initialize React Hook Form with Zod resolver
+  const form = useForm<ReferralFormValues>({
+    resolver: zodResolver(referralFormSchema),
+    defaultValues: {
+      clientName: referral.clientName,
+      source: referral.source,
+      status: referral.status,
+      value: referral.value?.toString() || "",
+      notes: referral.notes || "",
+    },
+  });
 
-  const handleUpdate = async () => {
+  const { isSubmitting } = form.formState;
+
+  const handleUpdate = async (values: ReferralFormValues) => {
     try {
-      setIsSubmitting(true);
-      
       await updateReferral(referral.id, {
-        clientName,
-        source,
-        status,
-        value: value ? parseInt(value, 10) : undefined,
-        notes: notes || undefined
+        clientName: values.clientName,
+        source: values.source,
+        status: values.status,
+        value: values.value ? parseInt(values.value, 10) : undefined,
+        notes: values.notes || undefined
       });
       
       setIsEditing(false);
       onClose();
     } catch (error) {
       console.error("Failed to update referral:", error);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -62,74 +79,103 @@ export const ReferralDetails: React.FC<ReferralDetailsProps> = ({ referral, onCl
         <DialogHeader>
           <DialogTitle>Edit Referral</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-6 py-4">
-          <div className="grid gap-3">
-            <Label htmlFor="clientName">Client Name</Label>
-            <Input 
-              id="clientName"
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-              placeholder="Enter client's full name" 
-              required
+        
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleUpdate)} className="grid gap-6 py-4">
+            <FormField
+              control={form.control}
+              name="clientName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Client Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid gap-3">
-            <Label htmlFor="source">Referral Source</Label>
-            <Input 
-              id="source"
-              value={source}
-              onChange={(e) => setSource(e.target.value)}
-              placeholder="Who referred this client?" 
-              required
+            
+            <FormField
+              control={form.control}
+              name="source"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Referral Source</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid gap-3">
-            <Label htmlFor="value">Estimated Value</Label>
-            <Input 
-              id="value"
-              type="number"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder="Loan amount or potential value" 
+            
+            <FormField
+              control={form.control}
+              name="value"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Estimated Value</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="grid gap-3">
-            <Label htmlFor="status">Status</Label>
-            <Select 
-              value={status} 
-              onValueChange={(value) => setStatus(value as any)}
-            >
-              <SelectTrigger id="status">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="new">New</SelectItem>
-                <SelectItem value="contacted">Contacted</SelectItem>
-                <SelectItem value="in-progress">In Progress</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="lost">Lost</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid gap-3">
-            <Label htmlFor="notes">Notes</Label>
-            <Textarea 
-              id="notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Any additional details about this referral" 
-              rows={3}
+            
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select 
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="new">New</SelectItem>
+                      <SelectItem value="contacted">Contacted</SelectItem>
+                      <SelectItem value="in-progress">In Progress</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                      <SelectItem value="lost">Lost</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="flex justify-end gap-3 pt-4">
-            <Button variant="outline" onClick={() => setIsEditing(false)} disabled={isSubmitting}>
-              Cancel
-            </Button>
-            <Button onClick={handleUpdate} disabled={isSubmitting}>
-              {isSubmitting ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
-        </div>
+            
+            <FormField
+              control={form.control}
+              name="notes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Notes</FormLabel>
+                  <FormControl>
+                    <Textarea rows={3} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <div className="flex justify-end gap-3 pt-4">
+              <Button variant="outline" onClick={() => setIsEditing(false)} disabled={isSubmitting}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Saving..." : "Save Changes"}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     );
   }

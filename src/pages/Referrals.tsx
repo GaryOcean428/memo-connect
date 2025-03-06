@@ -16,20 +16,27 @@ import { useReferrals } from "@/hooks/use-referrals";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { ReferralsDashboard } from "@/components/referrals/ReferralsDashboard";
+import { Toaster } from "@/components/ui/toaster";
 
 const Referrals = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedReferral, setSelectedReferral] = useState<Referral | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"grid" | "list" | "dashboard">("grid");
   
   const { referrals, isLoading, error } = useReferrals();
 
   // Filter referrals based on search query and status
   const filteredReferrals = referrals.filter(referral => {
-    const matchesSearch = referral.clientName.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         referral.source.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = 
+      referral.clientName.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      referral.source.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (referral.notes && referral.notes.toLowerCase().includes(searchQuery.toLowerCase()));
+      
     const matchesStatus = statusFilter === "all" || referral.status === statusFilter;
+    
     return matchesSearch && matchesStatus;
   });
 
@@ -65,11 +72,12 @@ const Referrals = () => {
     }
 
     return (
-      <Tabs defaultValue="grid" className="mb-6">
+      <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="mb-6">
         <div className="flex justify-between items-center">
           <TabsList>
             <TabsTrigger value="grid">Grid View</TabsTrigger>
             <TabsTrigger value="list">List View</TabsTrigger>
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           </TabsList>
           <div className="text-sm text-muted-foreground">
             Showing {filteredReferrals.length} referrals
@@ -90,6 +98,11 @@ const Referrals = () => {
             referrals={filteredReferrals}
             onSelectReferral={handleSelectReferral}
           />
+        </TabsContent>
+        
+        {/* Dashboard View */}
+        <TabsContent value="dashboard" className="mt-6">
+          <ReferralsDashboard referrals={referrals} />
         </TabsContent>
       </Tabs>
     );
@@ -130,6 +143,8 @@ const Referrals = () => {
           />
         )}
       </Dialog>
+      
+      <Toaster />
     </PageTransition>
   );
 };

@@ -44,6 +44,7 @@ export function useReferrals() {
         .order('date', { ascending: false });
 
       if (error) {
+        console.error('Error fetching referrals:', error);
         throw error;
       }
 
@@ -71,6 +72,7 @@ export function useReferrals() {
 
       // Convert from our frontend model to the database model
       const dbReferral = {
+        user_id: user.id,
         client_name: referralData.clientName,
         source: referralData.source,
         status: referralData.status,
