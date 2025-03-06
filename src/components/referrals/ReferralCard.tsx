@@ -28,6 +28,8 @@ interface ReferralCardProps {
 }
 
 export const ReferralCard: React.FC<ReferralCardProps> = ({ referral, onClick }) => {
+  const hasValue = referral.value !== undefined && referral.value > 0;
+  
   return (
     <DashboardCard 
       className="hover:border-primary cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
@@ -56,7 +58,7 @@ export const ReferralCard: React.FC<ReferralCardProps> = ({ referral, onClick })
           </span>
         )}
       </div>
-      {referral.value && (
+      {hasValue && (
         <div className="text-sm mb-2">
           <span className="inline-block">Potential value: <span className="font-medium">${referral.value.toLocaleString()}</span></span>
         </div>

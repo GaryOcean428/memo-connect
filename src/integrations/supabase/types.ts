@@ -636,6 +636,7 @@ export type Database = {
           date: string
           id: string
           notes: string | null
+          referrer_id: string | null
           referrer_type: string | null
           source: string
           status: string
@@ -649,6 +650,7 @@ export type Database = {
           date?: string
           id?: string
           notes?: string | null
+          referrer_id?: string | null
           referrer_type?: string | null
           source: string
           status: string
@@ -662,6 +664,7 @@ export type Database = {
           date?: string
           id?: string
           notes?: string | null
+          referrer_id?: string | null
           referrer_type?: string | null
           source?: string
           status?: string
