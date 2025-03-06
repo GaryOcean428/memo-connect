@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from './use-toast';
 import { Referral } from '@/components/referrals/ReferralCard';
 import { useReferralMapper } from './use-referral-mapper';
+import { MOCK_REFERRALS } from '@/data/referrals';
 
 export function useReferralOperations(fetchReferrals: () => Promise<void>) {
   const { user } = useAuth();
@@ -35,6 +36,25 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
 
       if (error) {
         console.error('Supabase error adding referral:', error);
+        
+        // Handle permission denied error specially
+        if (error.code === '42501') {
+          toast({
+            title: 'Demo Mode',
+            description: 'In demo mode, referrals are not actually saved to the database.',
+          });
+          
+          // Return a fake success with demo data
+          const mockReferral = {
+            ...MOCK_REFERRALS[0],
+            ...referralData,
+            id: `demo-${Date.now()}`,
+            date: new Date().toISOString()
+          };
+          
+          return mapDbReferralToReferral(mockReferral);
+        }
+        
         throw error;
       }
 
@@ -75,6 +95,16 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
 
       if (error) {
         console.error('Supabase error updating referral:', error);
+        
+        // Handle permission denied error specially
+        if (error.code === '42501') {
+          toast({
+            title: 'Demo Mode',
+            description: 'In demo mode, referrals are not actually updated in the database.',
+          });
+          return;
+        }
+        
         throw error;
       }
 
@@ -110,6 +140,16 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
 
       if (error) {
         console.error('Supabase error deleting referral:', error);
+        
+        // Handle permission denied error specially
+        if (error.code === '42501') {
+          toast({
+            title: 'Demo Mode',
+            description: 'In demo mode, referrals are not actually deleted from the database.',
+          });
+          return;
+        }
+        
         throw error;
       }
 

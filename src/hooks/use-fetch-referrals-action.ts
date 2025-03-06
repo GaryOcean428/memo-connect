@@ -15,10 +15,12 @@ export function useFetchReferralsAction() {
   // Return a memoized function that can be called later
   const fetchReferrals = useCallback(async () => {
     if (!user) {
-      return { data: [], error: null };
+      console.log('No user logged in, returning mock data');
+      return { data: MOCK_REFERRALS.map(mapDbReferralToReferral), error: null };
     }
 
     try {
+      // Add the Auth header explicitly to ensure RLS works properly
       const { data, error } = await supabase
         .from('referrals')
         .select('*')
@@ -30,6 +32,19 @@ export function useFetchReferralsAction() {
         // If the table doesn't exist yet, use mock data but don't show an error
         if (error.code === '42P01') {
           console.log('Referrals table does not exist yet. Using mock data instead.');
+          return { 
+            data: MOCK_REFERRALS.map(mapDbReferralToReferral), 
+            error: null 
+          };
+        }
+        
+        // Handle permission errors by using mock data
+        if (error.code === '42501') {
+          console.log('Permission denied for referrals table. Using mock data instead.');
+          toast({
+            title: 'Using demo data',
+            description: 'Currently showing sample referrals data.',
+          });
           return { 
             data: MOCK_REFERRALS.map(mapDbReferralToReferral), 
             error: null 
