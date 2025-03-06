@@ -13,19 +13,35 @@ export function useFetchReferrals() {
 
   // Wrapper function that manages state updates
   const fetchReferrals = useCallback(async () => {
-    setIsLoading(true);
+    // Only show loading state for the initial fetch
+    if (referrals.length === 0) {
+      setIsLoading(true);
+    }
     setError(null);
     
-    const { data, error } = await fetchReferralsAction();
-    
-    setReferrals(data);
-    if (error) setError(error);
-    setIsLoading(false);
-  }, [fetchReferralsAction]);
+    try {
+      const { data, error } = await fetchReferralsAction();
+      
+      setReferrals(data || []);
+      if (error) setError(error);
+    } catch (err) {
+      console.error('Unexpected error in fetchReferrals:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fetchReferralsAction, referrals.length]);
 
   // Fetch referrals when the component mounts or user changes
   useEffect(() => {
-    fetchReferrals();
+    if (user) {
+      fetchReferrals();
+    } else {
+      // Clear referrals when no user is logged in
+      setReferrals([]);
+      setIsLoading(false);
+      setError(null);
+    }
   }, [user, fetchReferrals]);
 
   return {

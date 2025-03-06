@@ -1,78 +1,49 @@
 
-import { Referral } from "@/components/referrals/ReferralCard";
-
-// Sample referrals data
-export const sampleReferrals: Referral[] = [
+// Mock data for referrals when the database table doesn't exist yet
+export const MOCK_REFERRALS = [
   {
-    id: "ref-001",
-    clientName: "James Wilson",
-    source: "Sarah Johnson (Realtor)",
-    status: "new",
-    date: "May 12, 2023",
-    value: 450000,
-    notes: "Looking for a home loan with low deposit options."
+    id: '1',
+    client_name: 'John Smith',
+    source: 'LinkedIn',
+    status: 'new',
+    date: new Date().toISOString(),
+    value: 5000,
+    notes: 'Interested in web development services'
   },
   {
-    id: "ref-002",
-    clientName: "Emily Rodriguez",
-    source: "Past Client Referral",
-    status: "contacted",
-    date: "May 10, 2023",
-    value: 380000,
-    notes: "First-time buyer, needs guidance on pre-approval process."
+    id: '2',
+    client_name: 'Sarah Johnson',
+    source: 'Networking Event',
+    status: 'contacted',
+    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    value: 7500,
+    notes: 'Looking for branding and marketing services'
   },
   {
-    id: "ref-003",
-    clientName: "Michael Chen",
-    source: "Website Inquiry",
-    status: "in-progress",
-    date: "May 5, 2023",
-    value: 520000,
-    notes: "Refinancing existing property, looking for better rates."
+    id: '3',
+    client_name: 'Michael Williams',
+    source: 'Referral',
+    status: 'in-progress',
+    date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    value: 10000,
+    notes: 'Needs a complete website redesign'
   },
   {
-    id: "ref-004",
-    clientName: "Sophia Patel",
-    source: "John Miller (Accountant)",
-    status: "in-progress",
-    date: "April 28, 2023",
-    value: 620000,
-    notes: "Investment property purchase, has existing relationship with ANZ."
+    id: '4',
+    client_name: 'Lisa Brown',
+    source: 'Website Contact Form',
+    status: 'completed',
+    date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    value: 3000,
+    notes: 'Logo design project'
   },
   {
-    id: "ref-005",
-    clientName: "Robert Davis",
-    source: "Tom Williams (Financial Advisor)",
-    status: "completed",
-    date: "April 15, 2023",
-    value: 340000,
-    notes: "Successfully secured home loan with Commonwealth Bank."
-  },
-  {
-    id: "ref-006",
-    clientName: "Lisa Zhang",
-    source: "WeChat Community Group",
-    status: "completed",
-    date: "April 10, 2023",
-    value: 490000,
-    notes: "Self-employed, required specialist lender solutions."
-  },
-  {
-    id: "ref-007",
-    clientName: "David Thompson",
-    source: "Google Ads Campaign",
-    status: "lost",
-    date: "April 5, 2023",
-    value: 275000,
-    notes: "Went with a different broker offering cash incentive."
-  },
-  {
-    id: "ref-008",
-    clientName: "Jessica Martinez",
-    source: "Community Event",
-    status: "new",
-    date: "May 14, 2023",
-    value: 410000,
-    notes: "Interested in comparing different lender options."
+    id: '5',
+    client_name: 'David Miller',
+    source: 'Email Campaign',
+    status: 'lost',
+    date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+    value: 8000,
+    notes: 'Chose another provider due to budget constraints'
   }
 ];
