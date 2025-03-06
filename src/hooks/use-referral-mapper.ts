@@ -15,7 +15,7 @@ export function useReferralMapper() {
     }),
     value: dbReferral.value,
     notes: dbReferral.notes,
-    referrerType: dbReferral.referrer_type
+    referrerType: dbReferral.referrer_type || 'client' // Ensure a default value if missing
   });
 
   // Convert from our frontend model to the database model
