@@ -32,7 +32,7 @@ export const FinanceArrangementsTab = () => {
 
   // Filter arrangements based on search
   const filteredArrangements = financeArrangements.filter(arrangement => {
-    const clientName = arrangement.client_name || arrangement.referral?.client_name || "";
+    const clientName = arrangement.client_name || arrangement.referral?.clientName || "";
     const lender = arrangement.lender || "";
     const loanType = arrangement.loan_type || "";
     const searchLower = searchQuery.toLowerCase();
@@ -105,7 +105,7 @@ export const FinanceArrangementsTab = () => {
                       className="cursor-pointer hover:bg-accent/40"
                     >
                       <TableCell>
-                        {arrangement.client_name || arrangement.referral?.client_name || "N/A"}
+                        {arrangement.client_name || arrangement.referral?.clientName || "N/A"}
                       </TableCell>
                       <TableCell>{arrangement.loan_type || "N/A"}</TableCell>
                       <TableCell>{arrangement.lender || "N/A"}</TableCell>

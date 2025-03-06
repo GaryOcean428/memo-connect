@@ -82,7 +82,7 @@ export const FinanceDashboard = () => {
             <div key={arr.id} className="py-2 border-b border-border last:border-0">
               <div className="flex justify-between items-center">
                 <div>
-                  <p className="font-medium">{arr.client_name || arr.referral?.client_name || 'Unknown Client'}</p>
+                  <p className="font-medium">{arr.client_name || arr.referral?.clientName || 'Unknown Client'}</p>
                   <p className="text-sm text-muted-foreground">{arr.loan_type} - {arr.lender}</p>
                 </div>
                 <div className="text-right">
@@ -101,8 +101,8 @@ export const FinanceDashboard = () => {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="font-medium">
-                    {comm.finance_arrangement?.clients?.name || 
-                     comm.finance_arrangement?.referrals?.client_name || 
+                    {comm.finance_arrangement?.client_name || 
+                     comm.finance_arrangement?.referral?.clientName || 
                      'Unknown Client'}
                   </p>
                   <p className="text-sm text-muted-foreground">

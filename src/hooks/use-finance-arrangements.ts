@@ -16,7 +16,7 @@ export const useFinanceArrangements = () => {
       .select(`
         *,
         clients (name),
-        referrals (id, clientName, source, status, date, value)
+        referrals (id, client_name, source, status, date, value)
       `)
       .order('created_at', { ascending: false });
 
@@ -28,7 +28,14 @@ export const useFinanceArrangements = () => {
     return data.map(item => ({
       ...item,
       client_name: item.clients?.name,
-      referral: item.referrals
+      referral: item.referrals ? {
+        id: item.referrals.id,
+        clientName: item.referrals.client_name,
+        source: item.referrals.source,
+        status: item.referrals.status,
+        date: item.referrals.date,
+        value: item.referrals.value
+      } : undefined
     }));
   };
 

@@ -31,14 +31,16 @@ import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { useFinanceArrangements } from "@/hooks/use-finance-arrangements";
 
 interface AddCommissionFormProps {
-  arrangementId: string;
+  arrangementId: string | null;
   onClose: () => void;
 }
 
 // Define Zod schema for form validation
 const commissionFormSchema = z.object({
+  finance_arrangement_id: z.string().optional(),
   upfront_amount: z.coerce.number().optional(),
   upfront_payment_date: z.date().optional(),
   trail_percentage: z.coerce.number().optional(),
@@ -54,12 +56,14 @@ export const AddCommissionForm: React.FC<AddCommissionFormProps> = ({
   onClose 
 }) => {
   const { addCommission } = useCommissions();
+  const { financeArrangements } = useFinanceArrangements();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Initialize form
   const form = useForm<CommissionFormValues>({
     resolver: zodResolver(commissionFormSchema),
     defaultValues: {
+      finance_arrangement_id: arrangementId || undefined,
       upfront_amount: undefined,
       trail_percentage: undefined,
       trail_amount: undefined,
@@ -73,7 +77,7 @@ export const AddCommissionForm: React.FC<AddCommissionFormProps> = ({
     
     try {
       await addCommission({
-        finance_arrangement_id: arrangementId,
+        finance_arrangement_id: values.finance_arrangement_id || '',
         upfront_amount: values.upfront_amount,
         upfront_payment_date: values.upfront_payment_date?.toISOString(),
         trail_percentage: values.trail_percentage,
@@ -93,6 +97,37 @@ export const AddCommissionForm: React.FC<AddCommissionFormProps> = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6 py-4">
+        {/* Finance Arrangement Selection */}
+        {!arrangementId && (
+          <FormField
+            control={form.control}
+            name="finance_arrangement_id"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Finance Arrangement</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select an arrangement" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {financeArrangements.map(arrangement => (
+                      <SelectItem key={arrangement.id} value={arrangement.id}>
+                        {arrangement.client_name || arrangement.referral?.clientName || 'Unknown'} - {arrangement.loan_type || 'N/A'}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
         <div className="grid sm:grid-cols-2 gap-4">
           {/* Upfront Amount */}
           <FormField

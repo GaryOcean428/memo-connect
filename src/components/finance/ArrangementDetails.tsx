@@ -73,7 +73,7 @@ export const ArrangementDetails: React.FC<ArrangementDetailsProps> = ({
             <div>
               <h3 className="text-sm font-medium text-muted-foreground">Client</h3>
               <p className="text-base break-words">
-                {arrangement.client_name || arrangement.referral?.client_name || "N/A"}
+                {arrangement.client_name || arrangement.referral?.clientName || "N/A"}
               </p>
             </div>
             

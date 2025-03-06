@@ -32,7 +32,7 @@ export const IncentivesTab = () => {
 
   // Filter incentives based on search
   const filteredIncentives = incentives.filter(incentive => {
-    const clientName = incentive.client_name || incentive.referral?.client_name || "";
+    const clientName = incentive.client_name || incentive.referral?.clientName || "";
     const incentiveType = incentive.type || "";
     const searchLower = searchQuery.toLowerCase();
     
@@ -101,7 +101,7 @@ export const IncentivesTab = () => {
                       className="cursor-pointer hover:bg-accent/40"
                     >
                       <TableCell>
-                        {incentive.client_name || incentive.referral?.client_name || "N/A"}
+                        {incentive.client_name || incentive.referral?.clientName || "N/A"}
                       </TableCell>
                       <TableCell>{incentive.type || "N/A"}</TableCell>
                       <TableCell className="text-right">

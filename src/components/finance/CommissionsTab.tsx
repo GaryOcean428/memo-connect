@@ -3,10 +3,7 @@ import React, { useState } from "react";
 import { useCommissions } from "@/hooks/use-commissions";
 import { 
   Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle 
+  CardContent
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -113,7 +110,10 @@ export const CommissionsTab: React.FC = () => {
           <DialogHeader>
             <DialogTitle>Add Commission</DialogTitle>
           </DialogHeader>
-          <AddCommissionForm onClose={() => setIsAddDialogOpen(false)} />
+          <AddCommissionForm 
+            arrangementId={null} 
+            onClose={() => setIsAddDialogOpen(false)} 
+          />
         </DialogContent>
       </Dialog>
 
