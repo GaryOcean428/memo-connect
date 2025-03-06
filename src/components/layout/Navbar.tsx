@@ -61,7 +61,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <NavLink to="/" className="text-xl font-semibold flex items-center gap-2 text-primary">
           <span className="w-14 h-8 rounded-md bg-primary flex items-center justify-center text-white">MCF</span>
-          <span className="hidden sm:inline-block">MemoConnect</span>
+          <span className="hidden sm:inline-block">Memo-Connect Financers</span>
         </NavLink>
 
         {/* Desktop Navigation */}
