@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Referrals from "./pages/Referrals";
 import Clients from "./pages/Clients";
+import Finance from "./pages/Finance";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -38,6 +39,11 @@ const App = () => (
             <Route path="/clients" element={
               <ProtectedRoute>
                 <Clients />
+              </ProtectedRoute>
+            } />
+            <Route path="/finance" element={
+              <ProtectedRoute>
+                <Finance />
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />
