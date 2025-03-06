@@ -1,3 +1,4 @@
+
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { useToast } from './use-toast';
@@ -17,7 +18,14 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
       }
 
       // Convert from our frontend model to the database model
-      const dbReferral = mapReferralToDbReferral(referralData, user.id);
+      const dbReferral = mapReferralToDbReferral({
+        ...referralData
+      });
+      
+      // Add the user_id for RLS policies
+      dbReferral.user_id = user.id;
+
+      console.log('Adding referral with data:', dbReferral);
 
       const { data, error } = await supabase
         .from('referrals')
@@ -26,6 +34,7 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
         .single();
 
       if (error) {
+        console.error('Supabase error adding referral:', error);
         throw error;
       }
 
@@ -65,6 +74,7 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
         .eq('id', id);
 
       if (error) {
+        console.error('Supabase error updating referral:', error);
         throw error;
       }
 
@@ -99,6 +109,7 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
         .eq('id', id);
 
       if (error) {
+        console.error('Supabase error deleting referral:', error);
         throw error;
       }
 

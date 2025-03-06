@@ -24,19 +24,26 @@ export function useFetchReferralsAction() {
         .select('*')
         .order('date', { ascending: false });
 
-      // Check if the error is because the table doesn't exist
-      if (error && error.code === '42P01') {
-        console.log('Referrals table does not exist yet. Using mock data instead.');
-        // Use mock data if the table doesn't exist
-        return { 
-          data: MOCK_REFERRALS.map(mapDbReferralToReferral), 
-          error: null 
-        };
-      }
-
       if (error) {
         console.error('Error fetching referrals:', error);
-        throw error;
+        
+        // If the table doesn't exist yet, use mock data but don't show an error
+        if (error.code === '42P01') {
+          console.log('Referrals table does not exist yet. Using mock data instead.');
+          return { 
+            data: MOCK_REFERRALS.map(mapDbReferralToReferral), 
+            error: null 
+          };
+        }
+        
+        // For any other errors, show the toast
+        toast({
+          title: 'Error fetching referrals',
+          description: error.message,
+          variant: 'destructive',
+        });
+        
+        return { data: [], error: error.message };
       }
 
       const mappedReferrals = data.map(mapDbReferralToReferral);
@@ -44,14 +51,11 @@ export function useFetchReferralsAction() {
     } catch (err: any) {
       console.error('Error fetching referrals:', err);
       
-      // Don't show toast for table not existing error when using mock data
-      if (!(err.code === '42P01')) {
-        toast({
-          title: 'Error fetching referrals',
-          description: err.message,
-          variant: 'destructive',
-        });
-      }
+      toast({
+        title: 'Error fetching referrals',
+        description: err.message,
+        variant: 'destructive',
+      });
       
       return { data: [], error: err.message };
     }

@@ -411,6 +411,45 @@ export type Database = {
         }
         Relationships: []
       }
+      referrals: {
+        Row: {
+          client_name: string
+          created_at: string
+          date: string
+          id: string
+          notes: string | null
+          source: string
+          status: string
+          updated_at: string
+          user_id: string
+          value: number | null
+        }
+        Insert: {
+          client_name: string
+          created_at?: string
+          date?: string
+          id?: string
+          notes?: string | null
+          source: string
+          status: string
+          updated_at?: string
+          user_id: string
+          value?: number | null
+        }
+        Update: {
+          client_name?: string
+          created_at?: string
+          date?: string
+          id?: string
+          notes?: string | null
+          source?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          value?: number | null
+        }
+        Relationships: []
+      }
       support_contact: {
         Row: {
           action_items: string[] | null

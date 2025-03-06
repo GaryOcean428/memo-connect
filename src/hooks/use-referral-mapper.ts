@@ -18,10 +18,9 @@ export function useReferralMapper() {
   });
 
   // Convert from our frontend model to the database model
-  const mapReferralToDbReferral = (referralData: Partial<Omit<Referral, 'id' | 'date'>>, userId?: string) => {
+  const mapReferralToDbReferral = (referralData: Partial<Omit<Referral, 'id' | 'date'>>) => {
     const dbReferral: Record<string, any> = {};
     
-    if (userId) dbReferral.user_id = userId;
     if (referralData.clientName !== undefined) dbReferral.client_name = referralData.clientName;
     if (referralData.source !== undefined) dbReferral.source = referralData.source;
     if (referralData.status !== undefined) dbReferral.status = referralData.status;
