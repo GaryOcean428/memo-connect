@@ -30,18 +30,18 @@ export const ReferralViewDetails: React.FC<ReferralViewDetailsProps> = ({
   onEdit
 }) => {
   return (
-    <DialogContent className="sm:max-w-[525px]">
+    <DialogContent className="sm:max-w-[525px] max-h-[85vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>Referral Details</DialogTitle>
       </DialogHeader>
       <div className="space-y-4">
         <div>
           <h3 className="text-sm font-medium text-muted-foreground">Client Name</h3>
-          <p className="text-base">{referral.clientName}</p>
+          <p className="text-base break-words">{referral.clientName}</p>
         </div>
         <div>
           <h3 className="text-sm font-medium text-muted-foreground">Referral Source</h3>
-          <p className="text-base">{referral.source}</p>
+          <p className="text-base break-words">{referral.source}</p>
         </div>
         {referral.referrerType && (
           <div>
@@ -68,10 +68,10 @@ export const ReferralViewDetails: React.FC<ReferralViewDetailsProps> = ({
         {referral.notes && (
           <div>
             <h3 className="text-sm font-medium text-muted-foreground">Notes</h3>
-            <p className="text-base">{referral.notes}</p>
+            <p className="text-base break-words whitespace-pre-wrap">{referral.notes}</p>
           </div>
         )}
-        <div className="flex justify-end gap-3 pt-4">
+        <div className="flex flex-wrap justify-end gap-3 pt-4">
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive">Delete</Button>
@@ -83,7 +83,7 @@ export const ReferralViewDetails: React.FC<ReferralViewDetailsProps> = ({
                   This action cannot be undone. This will permanently delete the referral for {referral.clientName}.
                 </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogFooter>
+              <AlertDialogFooter className="flex-wrap gap-2">
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
               </AlertDialogFooter>

@@ -41,7 +41,8 @@ const Referrals = () => {
     const matchesSearch = 
       referral.clientName.toLowerCase().includes(searchQuery.toLowerCase()) || 
       referral.source.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (referral.notes && referral.notes.toLowerCase().includes(searchQuery.toLowerCase()));
+      (referral.notes && referral.notes.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (referral.referrerType && referral.referrerType.toLowerCase().includes(searchQuery.toLowerCase()));
       
     const matchesStatus = statusFilter === "all" || referral.status === statusFilter;
     
@@ -69,7 +70,7 @@ const Referrals = () => {
 
     if (error) {
       return (
-        <Alert variant="destructive">
+        <Alert variant="destructive" role="alert">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>
@@ -82,7 +83,7 @@ const Referrals = () => {
     return (
       <>
         {isDemoMode && (
-          <Alert className="mb-6 bg-blue-50 text-blue-800 border-blue-200">
+          <Alert className="mb-6 bg-blue-50 text-blue-800 border-blue-200" role="status">
             <InfoIcon className="h-4 w-4 text-blue-600" />
             <AlertTitle>Demo Mode Active</AlertTitle>
             <AlertDescription>
@@ -92,14 +93,14 @@ const Referrals = () => {
         )}
         
         <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="mb-6">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <TabsList>
               <TabsTrigger value="grid">Grid View</TabsTrigger>
               <TabsTrigger value="list">List View</TabsTrigger>
               <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             </TabsList>
             <div className="text-sm text-muted-foreground">
-              Showing {filteredReferrals.length} referrals
+              Showing {filteredReferrals.length} {filteredReferrals.length === 1 ? 'referral' : 'referrals'}
             </div>
           </div>
           
