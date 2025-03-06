@@ -16,7 +16,7 @@ export const useFinanceArrangements = () => {
       .select(`
         *,
         clients (name),
-        referrals (id, client_name, source, status, date, value)
+        referrals (id, clientName, source, status, date, value)
       `)
       .order('created_at', { ascending: false });
 
