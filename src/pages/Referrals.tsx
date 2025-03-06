@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BlurBackground } from "@/components/ui/BlurBackground";
 import { Navbar } from "@/components/layout/Navbar";
 import { PageTransition } from "@/components/layout/PageTransition";
@@ -15,7 +15,7 @@ import { AddReferralForm } from "@/components/referrals/AddReferralForm";
 import { useReferrals } from "@/hooks/use-referrals";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, InfoIcon } from "lucide-react";
 import { ReferralsDashboard } from "@/components/referrals/ReferralsDashboard";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -25,8 +25,16 @@ const Referrals = () => {
   const [selectedReferral, setSelectedReferral] = useState<Referral | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"grid" | "list" | "dashboard">("grid");
+  const [isDemoMode, setIsDemoMode] = useState(false);
   
   const { referrals, isLoading, error } = useReferrals();
+
+  // Check if we're in demo mode based on the first referral ID
+  useEffect(() => {
+    if (referrals.length > 0 && referrals[0].id.toString().startsWith('demo-')) {
+      setIsDemoMode(true);
+    }
+  }, [referrals]);
 
   // Filter referrals based on search query and status
   const filteredReferrals = referrals.filter(referral => {
@@ -72,39 +80,51 @@ const Referrals = () => {
     }
 
     return (
-      <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="mb-6">
-        <div className="flex justify-between items-center">
-          <TabsList>
-            <TabsTrigger value="grid">Grid View</TabsTrigger>
-            <TabsTrigger value="list">List View</TabsTrigger>
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          </TabsList>
-          <div className="text-sm text-muted-foreground">
-            Showing {filteredReferrals.length} referrals
+      <>
+        {isDemoMode && (
+          <Alert className="mb-6 bg-blue-50 text-blue-800 border-blue-200">
+            <InfoIcon className="h-4 w-4 text-blue-600" />
+            <AlertTitle>Demo Mode Active</AlertTitle>
+            <AlertDescription>
+              You're currently viewing sample data. Changes made in demo mode won't be saved to the database.
+            </AlertDescription>
+          </Alert>
+        )}
+        
+        <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value as any)} className="mb-6">
+          <div className="flex justify-between items-center">
+            <TabsList>
+              <TabsTrigger value="grid">Grid View</TabsTrigger>
+              <TabsTrigger value="list">List View</TabsTrigger>
+              <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            </TabsList>
+            <div className="text-sm text-muted-foreground">
+              Showing {filteredReferrals.length} referrals
+            </div>
           </div>
-        </div>
-        
-        {/* Grid View */}
-        <TabsContent value="grid" className="mt-6">
-          <ReferralsGrid 
-            referrals={filteredReferrals}
-            onSelectReferral={handleSelectReferral}
-          />
-        </TabsContent>
-        
-        {/* List View */}
-        <TabsContent value="list" className="mt-6">
-          <ReferralsList 
-            referrals={filteredReferrals}
-            onSelectReferral={handleSelectReferral}
-          />
-        </TabsContent>
-        
-        {/* Dashboard View */}
-        <TabsContent value="dashboard" className="mt-6">
-          <ReferralsDashboard referrals={referrals} />
-        </TabsContent>
-      </Tabs>
+          
+          {/* Grid View */}
+          <TabsContent value="grid" className="mt-6">
+            <ReferralsGrid 
+              referrals={filteredReferrals}
+              onSelectReferral={handleSelectReferral}
+            />
+          </TabsContent>
+          
+          {/* List View */}
+          <TabsContent value="list" className="mt-6">
+            <ReferralsList 
+              referrals={filteredReferrals}
+              onSelectReferral={handleSelectReferral}
+            />
+          </TabsContent>
+          
+          {/* Dashboard View */}
+          <TabsContent value="dashboard" className="mt-6">
+            <ReferralsDashboard referrals={referrals} />
+          </TabsContent>
+        </Tabs>
+      </>
     );
   };
 

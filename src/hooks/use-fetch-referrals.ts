@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Referral } from '@/components/referrals/ReferralCard';
 import { useFetchReferralsAction } from './use-fetch-referrals-action';
@@ -10,6 +10,7 @@ export function useFetchReferrals() {
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
   const fetchReferralsAction = useFetchReferralsAction();
+  const initialFetchDoneRef = useRef(false);
 
   // Wrapper function that manages state updates
   const fetchReferrals = useCallback(async () => {
@@ -29,18 +30,20 @@ export function useFetchReferrals() {
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setIsLoading(false);
+      initialFetchDoneRef.current = true;
     }
   }, [fetchReferralsAction, referrals.length]);
 
   // Fetch referrals when the component mounts or user changes
   useEffect(() => {
-    if (user) {
+    if (user && !initialFetchDoneRef.current) {
       fetchReferrals();
-    } else {
+    } else if (!user) {
       // Clear referrals when no user is logged in
       setReferrals([]);
       setIsLoading(false);
       setError(null);
+      initialFetchDoneRef.current = false;
     }
   }, [user, fetchReferrals]);
 

@@ -5,17 +5,37 @@ import { useToast } from './use-toast';
 import { Referral } from '@/components/referrals/ReferralCard';
 import { useReferralMapper } from './use-referral-mapper';
 import { MOCK_REFERRALS } from '@/data/referrals';
+import { useRef } from 'react';
 
 export function useReferralOperations(fetchReferrals: () => Promise<void>) {
   const { user } = useAuth();
   const { toast } = useToast();
   const { mapDbReferralToReferral, mapReferralToDbReferral } = useReferralMapper();
+  const permissionErrorRef = useRef(false);
 
   // Add a new referral
   const addReferral = async (referralData: Omit<Referral, 'id' | 'date'>) => {
     try {
       if (!user) {
         throw new Error('You must be logged in to add a referral');
+      }
+
+      // If we've already encountered a permission error, don't even try to hit Supabase
+      if (permissionErrorRef.current) {
+        toast({
+          title: 'Demo Mode',
+          description: 'In demo mode, referrals are not actually saved to the database.',
+        });
+        
+        // Return a fake success with demo data
+        const mockReferral = {
+          ...MOCK_REFERRALS[0],
+          ...referralData,
+          id: `demo-${Date.now()}`,
+          date: new Date().toISOString()
+        };
+        
+        return mapDbReferralToReferral(mockReferral);
       }
 
       // Convert from our frontend model to the database model
@@ -39,6 +59,7 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
         
         // Handle permission denied error specially
         if (error.code === '42501') {
+          permissionErrorRef.current = true;
           toast({
             title: 'Demo Mode',
             description: 'In demo mode, referrals are not actually saved to the database.',
@@ -85,6 +106,15 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
         throw new Error('You must be logged in to update a referral');
       }
 
+      // If we've already encountered a permission error, don't even try to hit Supabase
+      if (permissionErrorRef.current) {
+        toast({
+          title: 'Demo Mode',
+          description: 'In demo mode, referrals are not actually updated in the database.',
+        });
+        return;
+      }
+
       // Convert from our frontend model to the database model
       const dbReferral = mapReferralToDbReferral(referralData);
 
@@ -98,6 +128,7 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
         
         // Handle permission denied error specially
         if (error.code === '42501') {
+          permissionErrorRef.current = true;
           toast({
             title: 'Demo Mode',
             description: 'In demo mode, referrals are not actually updated in the database.',
@@ -133,6 +164,15 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
         throw new Error('You must be logged in to delete a referral');
       }
 
+      // If we've already encountered a permission error, don't even try to hit Supabase
+      if (permissionErrorRef.current) {
+        toast({
+          title: 'Demo Mode',
+          description: 'In demo mode, referrals are not actually deleted from the database.',
+        });
+        return;
+      }
+
       const { error } = await supabase
         .from('referrals')
         .delete()
@@ -143,6 +183,7 @@ export function useReferralOperations(fetchReferrals: () => Promise<void>) {
         
         // Handle permission denied error specially
         if (error.code === '42501') {
+          permissionErrorRef.current = true;
           toast({
             title: 'Demo Mode',
             description: 'In demo mode, referrals are not actually deleted from the database.',
