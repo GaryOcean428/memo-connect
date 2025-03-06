@@ -60,9 +60,7 @@ export const Navbar: React.FC = () => {
   return <nav className={cn("fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 transition-all duration-300", isScrolled ? "py-3 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm" : "py-5 bg-transparent")}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <NavLink to="/" className="text-xl font-semibold flex items-center gap-2 text-primary">
-          <span className="w-8 h-8 rounded-md bg-primary flex items-center justify-center text-white">
-            FB
-          </span>
+          <span className="w-14 h-8 rounded-md bg-primary flex items-center justify-center text-white">MCF</span>
           <span className="hidden sm:inline-block">MemoConnect</span>
         </NavLink>
 
