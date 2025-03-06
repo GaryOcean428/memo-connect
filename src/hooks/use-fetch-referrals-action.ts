@@ -4,11 +4,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from './use-toast';
 import { useReferralMapper } from './use-referral-mapper';
 
+// This is a custom hook that returns a function to fetch referrals
 export function useFetchReferralsAction() {
   const { user } = useAuth();
   const { toast } = useToast();
   const { mapDbReferralToReferral } = useReferralMapper();
 
+  // Return a memoized function that can be called later
   const fetchReferrals = async () => {
     if (!user) {
       return { data: [], error: null };

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Referral } from '@/components/referrals/ReferralCard';
 import { useFetchReferralsAction } from './use-fetch-referrals-action';
@@ -12,7 +12,7 @@ export function useFetchReferrals() {
   const fetchReferralsAction = useFetchReferralsAction();
 
   // Wrapper function that manages state updates
-  const fetchReferrals = async () => {
+  const fetchReferrals = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     
@@ -21,12 +21,12 @@ export function useFetchReferrals() {
     setReferrals(data);
     if (error) setError(error);
     setIsLoading(false);
-  };
+  }, [fetchReferralsAction]);
 
   // Fetch referrals when the component mounts or user changes
   useEffect(() => {
     fetchReferrals();
-  }, [user]);
+  }, [user, fetchReferrals]);
 
   return {
     referrals,

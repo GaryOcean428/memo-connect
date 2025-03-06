@@ -42,6 +42,126 @@ export type Database = {
         }
         Relationships: []
       }
+      competency_assessment: {
+        Row: {
+          assessment_date: string | null
+          assessor_name: string | null
+          attempt_number: number | null
+          competency_unit_id: string
+          created_at: string
+          evidence_urls: string[] | null
+          feedback: string | null
+          id: string
+          result: string | null
+          status: string
+          training_contract_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assessment_date?: string | null
+          assessor_name?: string | null
+          attempt_number?: number | null
+          competency_unit_id: string
+          created_at?: string
+          evidence_urls?: string[] | null
+          feedback?: string | null
+          id?: string
+          result?: string | null
+          status: string
+          training_contract_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assessment_date?: string | null
+          assessor_name?: string | null
+          attempt_number?: number | null
+          competency_unit_id?: string
+          created_at?: string
+          evidence_urls?: string[] | null
+          feedback?: string | null
+          id?: string
+          result?: string | null
+          status?: string
+          training_contract_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competency_assessment_competency_fkey"
+            columns: ["competency_unit_id"]
+            isOneToOne: false
+            referencedRelation: "competency_unit"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "competency_assessment_contract_fkey"
+            columns: ["training_contract_id"]
+            isOneToOne: false
+            referencedRelation: "TrainingContract"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "competency_assessment_user_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "User"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      competency_unit: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          nominal_hours: number | null
+          prerequisites: string[] | null
+          qualification_id: string
+          unit_code: string
+          unit_name: string
+          unit_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          nominal_hours?: number | null
+          prerequisites?: string[] | null
+          qualification_id: string
+          unit_code: string
+          unit_name: string
+          unit_type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          nominal_hours?: number | null
+          prerequisites?: string[] | null
+          qualification_id?: string
+          unit_code?: string
+          unit_name?: string
+          unit_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "competency_unit_qualification_fkey"
+            columns: ["qualification_id"]
+            isOneToOne: false
+            referencedRelation: "Qualification"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Customer: {
         Row: {
           apprentice_capacity: number | null
@@ -291,6 +411,127 @@ export type Database = {
         }
         Relationships: []
       }
+      support_contact: {
+        Row: {
+          action_items: string[] | null
+          contact_date: string
+          contact_type: string
+          created_at: string
+          employer_present: boolean | null
+          follow_up_date: string | null
+          follow_up_required: boolean | null
+          id: string
+          notes: string | null
+          staff_name: string
+          training_discussion: boolean | null
+          updated_at: string
+          user_id: string
+          wellbeing_discussion: boolean | null
+        }
+        Insert: {
+          action_items?: string[] | null
+          contact_date: string
+          contact_type: string
+          created_at?: string
+          employer_present?: boolean | null
+          follow_up_date?: string | null
+          follow_up_required?: boolean | null
+          id?: string
+          notes?: string | null
+          staff_name: string
+          training_discussion?: boolean | null
+          updated_at?: string
+          user_id: string
+          wellbeing_discussion?: boolean | null
+        }
+        Update: {
+          action_items?: string[] | null
+          contact_date?: string
+          contact_type?: string
+          created_at?: string
+          employer_present?: boolean | null
+          follow_up_date?: string | null
+          follow_up_required?: boolean | null
+          id?: string
+          notes?: string | null
+          staff_name?: string
+          training_discussion?: boolean | null
+          updated_at?: string
+          user_id?: string
+          wellbeing_discussion?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_contact_user_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "User"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      training_plan_review: {
+        Row: {
+          action_items: string[] | null
+          apprentice_feedback: string | null
+          attendance_rating: number | null
+          created_at: string
+          employer_feedback: string | null
+          id: string
+          next_review_date: string | null
+          notes: string | null
+          performance_rating: number | null
+          progress: string | null
+          review_date: string
+          reviewer_name: string
+          status: string
+          training_contract_id: string
+          updated_at: string
+        }
+        Insert: {
+          action_items?: string[] | null
+          apprentice_feedback?: string | null
+          attendance_rating?: number | null
+          created_at?: string
+          employer_feedback?: string | null
+          id?: string
+          next_review_date?: string | null
+          notes?: string | null
+          performance_rating?: number | null
+          progress?: string | null
+          review_date: string
+          reviewer_name: string
+          status: string
+          training_contract_id: string
+          updated_at?: string
+        }
+        Update: {
+          action_items?: string[] | null
+          apprentice_feedback?: string | null
+          attendance_rating?: number | null
+          created_at?: string
+          employer_feedback?: string | null
+          id?: string
+          next_review_date?: string | null
+          notes?: string | null
+          performance_rating?: number | null
+          progress?: string | null
+          review_date?: string
+          reviewer_name?: string
+          status?: string
+          training_contract_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_plan_review_contract_fkey"
+            columns: ["training_contract_id"]
+            isOneToOne: false
+            referencedRelation: "TrainingContract"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       TrainingContract: {
         Row: {
           contract_identifier: string | null
@@ -516,6 +757,62 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      workplace_inspection: {
+        Row: {
+          attachments: string[] | null
+          created_at: string
+          customer_id: string
+          findings: string | null
+          follow_up_date: string | null
+          follow_up_required: boolean | null
+          id: string
+          inspection_date: string
+          inspector_name: string
+          recommendations: string | null
+          safety_rating: number | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attachments?: string[] | null
+          created_at?: string
+          customer_id: string
+          findings?: string | null
+          follow_up_date?: string | null
+          follow_up_required?: boolean | null
+          id?: string
+          inspection_date: string
+          inspector_name: string
+          recommendations?: string | null
+          safety_rating?: number | null
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          attachments?: string[] | null
+          created_at?: string
+          customer_id?: string
+          findings?: string | null
+          follow_up_date?: string | null
+          follow_up_required?: boolean | null
+          id?: string
+          inspection_date?: string
+          inspector_name?: string
+          recommendations?: string | null
+          safety_rating?: number | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workplace_inspection_customer_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "Customer"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
