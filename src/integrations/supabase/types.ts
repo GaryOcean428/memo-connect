@@ -183,6 +183,107 @@ export type Database = {
         }
         Relationships: []
       }
+      Qualification: {
+        Row: {
+          certLevel: string | null
+          code: string
+          created_at: string
+          description: string | null
+          id: string
+          isActive: boolean
+          name: string
+          nationalCode: string | null
+          trainingPackage: string | null
+          updated_at: string
+        }
+        Insert: {
+          certLevel?: string | null
+          code: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          isActive?: boolean
+          name: string
+          nationalCode?: string | null
+          trainingPackage?: string | null
+          updated_at?: string
+        }
+        Update: {
+          certLevel?: string | null
+          code?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          isActive?: boolean
+          name?: string
+          nationalCode?: string | null
+          trainingPackage?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      TrainingContract: {
+        Row: {
+          created_at: string
+          eligibleForFunding: boolean
+          expiryDate: string
+          hoursPerWeek: number
+          id: string
+          isCustodial: boolean
+          isExistingWorker: boolean
+          isSchoolBased: boolean
+          qualificationId: string | null
+          startDate: string
+          status: string
+          termMonths: number
+          updated_at: string
+          worksite: string | null
+          worksiteAddress: string | null
+        }
+        Insert: {
+          created_at?: string
+          eligibleForFunding: boolean
+          expiryDate: string
+          hoursPerWeek: number
+          id?: string
+          isCustodial: boolean
+          isExistingWorker: boolean
+          isSchoolBased: boolean
+          qualificationId?: string | null
+          startDate: string
+          status: string
+          termMonths: number
+          updated_at?: string
+          worksite?: string | null
+          worksiteAddress?: string | null
+        }
+        Update: {
+          created_at?: string
+          eligibleForFunding?: boolean
+          expiryDate?: string
+          hoursPerWeek?: number
+          id?: string
+          isCustodial?: boolean
+          isExistingWorker?: boolean
+          isSchoolBased?: boolean
+          qualificationId?: string | null
+          startDate?: string
+          status?: string
+          termMonths?: number
+          updated_at?: string
+          worksite?: string | null
+          worksiteAddress?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "TrainingContract_qualificationId_fkey"
+            columns: ["qualificationId"]
+            isOneToOne: false
+            referencedRelation: "Qualification"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       User: {
         Row: {
           created_at: string

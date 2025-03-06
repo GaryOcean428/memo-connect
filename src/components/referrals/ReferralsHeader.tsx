@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 interface ReferralsHeaderProps {
-  onOpenAddDialog: () => void;
+  onOpenAddDialog: (open: boolean) => void;
   isAddDialogOpen: boolean;
 }
 

@@ -4,7 +4,7 @@ import { BlurBackground } from "@/components/ui/BlurBackground";
 import { Navbar } from "@/components/layout/Navbar";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { Referral } from "@/components/referrals/ReferralCard";
-import { Dialog } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReferralsHeader } from "@/components/referrals/ReferralsHeader";
 import { ReferralsFilter } from "@/components/referrals/ReferralsFilter";
@@ -86,18 +86,18 @@ const Referrals = () => {
       </main>
       
       {/* Dialogs */}
-      {isAddDialogOpen && (
-        <AddReferralForm onClose={() => setIsAddDialogOpen(false)} />
-      )}
+      <Dialog open={isAddDialogOpen} onOpenChange={handleOpenAddDialog}>
+        {isAddDialogOpen && <AddReferralForm onClose={() => setIsAddDialogOpen(false)} />}
+      </Dialog>
       
-      {selectedReferral && (
-        <Dialog open={!!selectedReferral} onOpenChange={() => setSelectedReferral(null)}>
+      <Dialog open={!!selectedReferral} onOpenChange={() => setSelectedReferral(null)}>
+        {selectedReferral && (
           <ReferralDetails 
             referral={selectedReferral}
             onClose={() => setSelectedReferral(null)}
           />
-        </Dialog>
-      )}
+        )}
+      </Dialog>
     </PageTransition>
   );
 };
