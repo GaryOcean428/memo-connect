@@ -5,9 +5,11 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, BarChart, Users, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -30,14 +32,25 @@ const Index = () => {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button 
-                  size="lg" 
-                  className="rounded-full text-base"
-                  onClick={() => navigate("/dashboard")}
-                >
-                  Get Started
-                  <ChevronRight className="ml-2 h-5 w-5" />
-                </Button>
+                {user ? (
+                  <Button 
+                    size="lg" 
+                    className="rounded-full text-base"
+                    onClick={() => navigate("/dashboard")}
+                  >
+                    Go to Dashboard
+                    <ChevronRight className="ml-2 h-5 w-5" />
+                  </Button>
+                ) : (
+                  <Button 
+                    size="lg" 
+                    className="rounded-full text-base"
+                    onClick={() => navigate("/auth")}
+                  >
+                    Get Started
+                    <ChevronRight className="ml-2 h-5 w-5" />
+                  </Button>
+                )}
                 <Button 
                   variant="outline" 
                   size="lg" 

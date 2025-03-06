@@ -1,8 +1,17 @@
 
 import React, { useState, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, FileText, Menu, X } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Menu, X, LogOut, User } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 const navItems = [
   {
@@ -26,6 +35,8 @@ export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +51,30 @@ export const Navbar: React.FC = () => {
     // Close mobile menu on route change
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (!user) return "?";
+    
+    // Try to get from metadata first
+    const fullName = user.user_metadata?.full_name;
+    if (fullName) {
+      return fullName
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase()
+        .substring(0, 2);
+    }
+    
+    // Fallback to email
+    return user.email?.substring(0, 2).toUpperCase() || "?";
+  };
 
   return (
     <nav
@@ -82,6 +117,45 @@ export const Navbar: React.FC = () => {
           ))}
         </div>
 
+        {/* User Menu (Desktop) */}
+        <div className="hidden md:flex items-center">
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-secondary">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      {getUserInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-medium hidden lg:inline-block">
+                    {user.user_metadata?.full_name || user.email}
+                  </span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => navigate("/profile")}>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate("/auth")}
+              className="rounded-lg"
+            >
+              Sign In
+            </Button>
+          )}
+        </div>
+
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -111,6 +185,35 @@ export const Navbar: React.FC = () => {
                 <span>{item.name}</span>
               </NavLink>
             ))}
+            
+            {/* User options for mobile */}
+            {user ? (
+              <>
+                <div className="px-4 py-3 flex items-center gap-3 border-t border-border mt-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      {getUserInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <span className="font-medium">{user.user_metadata?.full_name || user.email}</span>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="px-4 py-3 flex items-center gap-3 w-full text-left hover:bg-secondary text-foreground/80 hover:text-foreground"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>Sign out</span>
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => navigate("/auth")}
+                className="px-4 py-3 flex items-center gap-3 w-full text-left hover:bg-secondary text-foreground/80 hover:text-foreground"
+              >
+                <User className="w-5 h-5" />
+                <span>Sign in</span>
+              </button>
+            )}
           </div>
         )}
       </div>
