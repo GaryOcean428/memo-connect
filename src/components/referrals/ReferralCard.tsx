@@ -11,6 +11,7 @@ export interface Referral {
   date: string;
   value?: number;
   notes?: string;
+  referrerType?: "broker" | "client" | "partner" | "other";
 }
 
 const statusColors = {
@@ -40,6 +41,11 @@ export const ReferralCard: React.FC<ReferralCardProps> = ({ referral, onClick })
       </div>
       <div className="text-sm text-muted-foreground mb-3">
         From: {referral.source}
+        {referral.referrerType && (
+          <span className="ml-2 text-xs bg-gray-100 px-2 py-0.5 rounded-full">
+            {referral.referrerType}
+          </span>
+        )}
       </div>
       {referral.value && (
         <div className="text-sm mb-2">

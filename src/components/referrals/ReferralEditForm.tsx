@@ -23,6 +23,7 @@ const referralFormSchema = z.object({
   source: z.string().min(1, "Referral source is required"),
   value: z.string().optional(),
   status: z.enum(["new", "contacted", "in-progress", "completed", "lost"]),
+  referrerType: z.enum(["broker", "client", "partner", "other"]),
   notes: z.string().optional(),
 });
 
@@ -38,6 +39,7 @@ export const ReferralEditForm: React.FC<ReferralEditFormProps> = ({ referral, on
       clientName: referral.clientName,
       source: referral.source,
       status: referral.status,
+      referrerType: referral.referrerType || "client",
       value: referral.value?.toString() || "",
       notes: referral.notes || "",
     },
@@ -51,6 +53,7 @@ export const ReferralEditForm: React.FC<ReferralEditFormProps> = ({ referral, on
         clientName: values.clientName,
         source: values.source,
         status: values.status,
+        referrerType: values.referrerType,
         value: values.value ? parseInt(values.value, 10) : undefined,
         notes: values.notes || undefined
       });
@@ -92,6 +95,33 @@ export const ReferralEditForm: React.FC<ReferralEditFormProps> = ({ referral, on
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="referrerType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Referrer Type</FormLabel>
+                <Select 
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="client">Client</SelectItem>
+                    <SelectItem value="broker">Broker</SelectItem>
+                    <SelectItem value="partner">Partner</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

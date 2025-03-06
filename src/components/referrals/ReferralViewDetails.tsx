@@ -43,6 +43,12 @@ export const ReferralViewDetails: React.FC<ReferralViewDetailsProps> = ({
           <h3 className="text-sm font-medium text-muted-foreground">Referral Source</h3>
           <p className="text-base">{referral.source}</p>
         </div>
+        {referral.referrerType && (
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground">Referrer Type</h3>
+            <p className="text-base capitalize">{referral.referrerType}</p>
+          </div>
+        )}
         <div>
           <h3 className="text-sm font-medium text-muted-foreground">Status</h3>
           <div className="mt-1">

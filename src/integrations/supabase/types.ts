@@ -42,6 +42,104 @@ export type Database = {
         }
         Relationships: []
       }
+      clients: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          postal_code: string | null
+          state: string | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      commissions: {
+        Row: {
+          created_at: string
+          finance_arrangement_id: string
+          id: string
+          notes: string | null
+          status: string | null
+          trail_amount: number | null
+          trail_percentage: number | null
+          updated_at: string
+          upfront_amount: number | null
+          upfront_payment_date: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          finance_arrangement_id: string
+          id?: string
+          notes?: string | null
+          status?: string | null
+          trail_amount?: number | null
+          trail_percentage?: number | null
+          updated_at?: string
+          upfront_amount?: number | null
+          upfront_payment_date?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          finance_arrangement_id?: string
+          id?: string
+          notes?: string | null
+          status?: string | null
+          trail_amount?: number | null
+          trail_percentage?: number | null
+          updated_at?: string
+          upfront_amount?: number | null
+          upfront_payment_date?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_finance_arrangement_id_fkey"
+            columns: ["finance_arrangement_id"]
+            isOneToOne: false
+            referencedRelation: "finance_arrangements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       competency_assessment: {
         Row: {
           assessment_date: string | null
@@ -309,6 +407,126 @@ export type Database = {
         }
         Relationships: []
       }
+      finance_arrangements: {
+        Row: {
+          application_date: string | null
+          client_id: string
+          created_at: string
+          id: string
+          lender: string | null
+          loan_amount: number | null
+          loan_type: string | null
+          notes: string | null
+          referral_id: string | null
+          settlement_date: string | null
+          status: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          application_date?: string | null
+          client_id: string
+          created_at?: string
+          id?: string
+          lender?: string | null
+          loan_amount?: number | null
+          loan_type?: string | null
+          notes?: string | null
+          referral_id?: string | null
+          settlement_date?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          application_date?: string | null
+          client_id?: string
+          created_at?: string
+          id?: string
+          lender?: string | null
+          loan_amount?: number | null
+          loan_type?: string | null
+          notes?: string | null
+          referral_id?: string | null
+          settlement_date?: string | null
+          status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "finance_arrangements_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "finance_arrangements_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      incentives: {
+        Row: {
+          amount: number | null
+          client_id: string | null
+          created_at: string
+          delivery_date: string | null
+          id: string
+          notes: string | null
+          referral_id: string | null
+          status: string | null
+          type: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number | null
+          client_id?: string | null
+          created_at?: string
+          delivery_date?: string | null
+          id?: string
+          notes?: string | null
+          referral_id?: string | null
+          status?: string | null
+          type?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number | null
+          client_id?: string | null
+          created_at?: string
+          delivery_date?: string | null
+          id?: string
+          notes?: string | null
+          referral_id?: string | null
+          status?: string | null
+          type?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "incentives_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "incentives_referral_id_fkey"
+            columns: ["referral_id"]
+            isOneToOne: false
+            referencedRelation: "referrals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notes: {
         Row: {
           created_at: string
@@ -418,6 +636,7 @@ export type Database = {
           date: string
           id: string
           notes: string | null
+          referrer_type: string | null
           source: string
           status: string
           updated_at: string
@@ -430,6 +649,7 @@ export type Database = {
           date?: string
           id?: string
           notes?: string | null
+          referrer_type?: string | null
           source: string
           status: string
           updated_at?: string
@@ -442,6 +662,7 @@ export type Database = {
           date?: string
           id?: string
           notes?: string | null
+          referrer_type?: string | null
           source?: string
           status?: string
           updated_at?: string

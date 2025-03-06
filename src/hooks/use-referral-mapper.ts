@@ -14,7 +14,8 @@ export function useReferralMapper() {
       day: 'numeric' 
     }),
     value: dbReferral.value,
-    notes: dbReferral.notes
+    notes: dbReferral.notes,
+    referrerType: dbReferral.referrer_type
   });
 
   // Convert from our frontend model to the database model
@@ -26,6 +27,7 @@ export function useReferralMapper() {
     if (referralData.status !== undefined) dbReferral.status = referralData.status;
     if (referralData.value !== undefined) dbReferral.value = referralData.value;
     if (referralData.notes !== undefined) dbReferral.notes = referralData.notes;
+    if (referralData.referrerType !== undefined) dbReferral.referrer_type = referralData.referrerType;
     
     return dbReferral;
   };
