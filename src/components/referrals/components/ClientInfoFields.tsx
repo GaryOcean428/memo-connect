@@ -1,16 +1,29 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { ReferralFormValues } from "../schemas/referralFormSchema";
+import { ContactSelector } from "./ContactSelector";
+import { Contact } from "@/hooks/use-contacts";
 
 interface ClientInfoFieldsProps {
   form: UseFormReturn<ReferralFormValues>;
 }
 
 export const ClientInfoFields: React.FC<ClientInfoFieldsProps> = ({ form }) => {
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+
+  const handleContactSelect = (contact: Contact | null) => {
+    setSelectedContact(contact);
+    if (contact) {
+      form.setValue("sourceContactId", contact.id);
+    } else {
+      form.setValue("sourceContactId", undefined);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-2">
@@ -35,7 +48,12 @@ export const ClientInfoFields: React.FC<ClientInfoFieldsProps> = ({ form }) => {
             <FormItem>
               <FormLabel>Referral Source</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Your name" />
+                <ContactSelector 
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  onContactSelect={handleContactSelect}
+                  placeholder="Select or type a referral source"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

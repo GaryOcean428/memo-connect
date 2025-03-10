@@ -30,6 +30,7 @@ export const useReferralSubmit = ({
       const referralData = {
         client_name: values.clientName,
         source: values.source,
+        source_contact_id: values.sourceContactId || null,
         referrer_type: values.referrerType,
         referrer_email: values.referrerEmail,
         referrer_phone: values.referrerPhone || null,

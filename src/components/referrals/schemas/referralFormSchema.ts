@@ -5,6 +5,7 @@ import { z } from "zod";
 export const referralFormSchema = z.object({
   clientName: z.string().min(1, "Client name is required"),
   source: z.string().min(1, "Referral source is required"),
+  sourceContactId: z.string().optional(), // Add field for storing contact ID
   referrerType: z.enum(["broker", "client", "partner", "other"]).default("client"),
   referrerEmail: z.string().email("Valid email is required"),
   referrerPhone: z.string().optional(),
