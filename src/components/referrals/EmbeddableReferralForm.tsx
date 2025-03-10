@@ -30,13 +30,17 @@ interface EmbeddableReferralFormProps {
   onError?: (error: Error) => void;
   recipientEmail?: string;
   className?: string;
+  isSubmitting?: boolean;
+  setIsSubmitting?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const EmbeddableReferralForm: React.FC<EmbeddableReferralFormProps> = ({ 
   onSuccess, 
   onError,
   recipientEmail = "",
-  className = "" 
+  className = "",
+  isSubmitting: externalIsSubmitting,
+  setIsSubmitting: externalSetIsSubmitting
 }) => {
   const { toast } = useToast();
   
@@ -55,9 +59,15 @@ export const EmbeddableReferralForm: React.FC<EmbeddableReferralFormProps> = ({
     },
   });
 
-  const { isSubmitting } = form.formState;
+  // Use the external submission state if provided, otherwise use the form's state
+  const submissionState = externalIsSubmitting !== undefined ? externalIsSubmitting : form.formState.isSubmitting;
 
   const onSubmit = async (values: ReferralFormValues) => {
+    // If external state management is provided, use it
+    if (externalSetIsSubmitting) {
+      externalSetIsSubmitting(true);
+    }
+    
     try {
       // Prepare the referral data for submission
       const referralData = {
@@ -108,6 +118,11 @@ export const EmbeddableReferralForm: React.FC<EmbeddableReferralFormProps> = ({
         variant: "destructive",
       });
       if (onError) onError(error);
+    } finally {
+      // Reset the submission state if external state management is provided
+      if (externalSetIsSubmitting) {
+        externalSetIsSubmitting(false);
+      }
     }
   };
 
@@ -264,9 +279,9 @@ export const EmbeddableReferralForm: React.FC<EmbeddableReferralFormProps> = ({
           <Button 
             type="submit" 
             className="w-full mt-2" 
-            disabled={isSubmitting}
+            disabled={submissionState}
           >
-            {isSubmitting ? "Submitting..." : "Submit Referral"}
+            {submissionState ? "Submitting..." : "Submit Referral"}
           </Button>
         </form>
       </Form>
