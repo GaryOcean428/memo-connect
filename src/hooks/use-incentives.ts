@@ -15,7 +15,7 @@ export const useIncentives = () => {
       .select(`
         *,
         clients (name),
-        referrals (id, client_name, source, status, date, value)
+        referrals (id, clientName, source, status, date, value)
       `)
       .order('created_at', { ascending: false });
 
@@ -29,7 +29,7 @@ export const useIncentives = () => {
       client_name: item.clients?.name,
       referral: item.referrals ? {
         id: item.referrals.id,
-        clientName: item.referrals.client_name,
+        clientName: item.referrals.clientName,
         source: item.referrals.source,
         status: item.referrals.status,
         date: item.referrals.date,

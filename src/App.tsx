@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Referrals from './pages/Referrals';
@@ -23,7 +24,6 @@ function App() {
           <Route path="/finance" element={<PrivateRoute><Finance /></PrivateRoute>} />
           <Route path="/clients" element={<PrivateRoute><Clients /></PrivateRoute>} />
           
-          {/* Update routes to include our new referral embed pages */}
           <Route path="/referral-embed" element={<PrivateRoute><ReferralEmbed /></PrivateRoute>} />
           <Route path="/referral-embed-standalone" element={<ReferralEmbedStandalone />} />
         </Routes>
