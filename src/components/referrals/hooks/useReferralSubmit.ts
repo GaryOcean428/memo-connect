@@ -36,6 +36,7 @@ export const useReferralSubmit = ({
         recipient_email: values.recipientEmail,
         value: values.value ? parseInt(values.value, 10) : null,
         notes: values.notes || null,
+        client_type: values.clientType || null,
         status: "new",
         date: new Date().toISOString(),
         is_external: true

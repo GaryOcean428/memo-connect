@@ -11,6 +11,7 @@ export const referralFormSchema = z.object({
   recipientEmail: z.string().email("Recipient email is required"),
   value: z.string().optional(),
   notes: z.string().optional(),
+  clientType: z.enum(["residential", "commercial", "personal", "asset", "other"]).optional(),
 });
 
 export type ReferralFormValues = z.infer<typeof referralFormSchema>;
