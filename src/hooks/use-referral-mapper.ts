@@ -15,7 +15,11 @@ export function useReferralMapper() {
     }),
     value: dbReferral.value,
     notes: dbReferral.notes,
-    referrerType: dbReferral.referrer_type || 'client' // Ensure a default value if missing
+    referrerType: dbReferral.referrer_type || 'client', // Ensure a default value if missing
+    referrerEmail: dbReferral.referrer_email,
+    referrerPhone: dbReferral.referrer_phone,
+    recipientEmail: dbReferral.recipient_email,
+    isExternal: dbReferral.is_external
   });
 
   // Convert from our frontend model to the database model
@@ -28,6 +32,10 @@ export function useReferralMapper() {
     if (referralData.value !== undefined) dbReferral.value = referralData.value;
     if (referralData.notes !== undefined) dbReferral.notes = referralData.notes;
     if (referralData.referrerType !== undefined) dbReferral.referrer_type = referralData.referrerType;
+    if (referralData.referrerEmail !== undefined) dbReferral.referrer_email = referralData.referrerEmail;
+    if (referralData.referrerPhone !== undefined) dbReferral.referrer_phone = referralData.referrerPhone;
+    if (referralData.recipientEmail !== undefined) dbReferral.recipient_email = referralData.recipientEmail;
+    if (referralData.isExternal !== undefined) dbReferral.is_external = referralData.isExternal;
     
     return dbReferral;
   };

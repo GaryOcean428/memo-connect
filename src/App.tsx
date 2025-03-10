@@ -1,57 +1,36 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Referrals from './pages/Referrals';
+import Finance from './pages/Finance';
+import Clients from './pages/Clients';
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import { AuthProvider } from './contexts/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+import { Toaster } from '@/components/ui/toaster';
+import ReferralEmbed from './pages/ReferralEmbed';
+import ReferralEmbedStandalone from './pages/ReferralEmbedStandalone';
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
-import Index from "./pages/Index";
-import Dashboard from "./pages/Dashboard";
-import Referrals from "./pages/Referrals";
-import Clients from "./pages/Clients";
-import Finance from "./pages/Finance";
-import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/auth/ProtectedRoute";
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/referrals" element={<PrivateRoute><Referrals /></PrivateRoute>} />
+          <Route path="/finance" element={<PrivateRoute><Finance /></PrivateRoute>} />
+          <Route path="/clients" element={<PrivateRoute><Clients /></PrivateRoute>} />
+          
+          {/* Update routes to include our new referral embed pages */}
+          <Route path="/referral-embed" element={<PrivateRoute><ReferralEmbed /></PrivateRoute>} />
+          <Route path="/referral-embed-standalone" element={<ReferralEmbedStandalone />} />
+        </Routes>
         <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/referrals" element={
-              <ProtectedRoute>
-                <Referrals />
-              </ProtectedRoute>
-            } />
-            <Route path="/clients" element={
-              <ProtectedRoute>
-                <Clients />
-              </ProtectedRoute>
-            } />
-            <Route path="/finance" element={
-              <ProtectedRoute>
-                <Finance />
-              </ProtectedRoute>
-            } />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+      </Router>
+    </AuthProvider>
+  );
+}
 
 export default App;

@@ -1,25 +1,16 @@
 
 import React from "react";
 import { Referral } from "./ReferralCard";
-import { ReferralStatusBadge } from "./ReferralStatusBadge";
-import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { 
-  AlertDialog, 
-  AlertDialogContent, 
-  AlertDialogHeader, 
-  AlertDialogTitle, 
-  AlertDialogTrigger, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogCancel, 
-  AlertDialogAction 
-} from "@/components/ui/alert-dialog";
+import { ReferralStatusBadge } from "./ReferralStatusBadge";
+import { formatDate } from "@/lib/utils";
+import { Calendar, DollarSign, ExternalLink, Mail, Phone, User } from "lucide-react";
 
 interface ReferralViewDetailsProps {
   referral: Referral;
   onClose: () => void;
-  onDelete: () => Promise<void>;
+  onDelete: () => void;
   onEdit: () => void;
 }
 
@@ -27,74 +18,113 @@ export const ReferralViewDetails: React.FC<ReferralViewDetailsProps> = ({
   referral,
   onClose,
   onDelete,
-  onEdit
+  onEdit,
 }) => {
+  const handleDelete = () => {
+    if (confirm("Are you sure you want to delete this referral?")) {
+      onDelete();
+    }
+  };
+
   return (
-    <DialogContent className="sm:max-w-[525px] max-h-[85vh] overflow-y-auto">
+    <DialogContent className="sm:max-w-[525px]">
       <DialogHeader>
         <DialogTitle>Referral Details</DialogTitle>
       </DialogHeader>
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-sm font-medium text-muted-foreground">Client Name</h3>
-          <p className="text-base break-words">{referral.clientName}</p>
-        </div>
-        <div>
-          <h3 className="text-sm font-medium text-muted-foreground">Referral Source</h3>
-          <p className="text-base break-words">{referral.source}</p>
-        </div>
-        {referral.referrerType && (
+
+      <div className="py-4">
+        <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="text-sm font-medium text-muted-foreground">Referrer Type</h3>
-            <p className="text-base capitalize">{referral.referrerType}</p>
+            <h2 className="text-xl font-semibold">{referral.clientName}</h2>
+            <p className="text-sm text-muted-foreground">From: {referral.source}</p>
+          </div>
+          <ReferralStatusBadge status={referral.status} />
+        </div>
+
+        {referral.isExternal && (
+          <div className="mb-4 p-3 bg-blue-50 text-blue-700 rounded-md flex items-center">
+            <ExternalLink className="h-4 w-4 mr-2" />
+            <span>This is an external referral</span>
           </div>
         )}
-        <div>
-          <h3 className="text-sm font-medium text-muted-foreground">Status</h3>
-          <div className="mt-1">
-            <ReferralStatusBadge status={referral.status} />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">Referrer Type</p>
+            <p className="flex items-center">
+              <User className="h-4 w-4 mr-2 text-muted-foreground" />
+              <span className="capitalize">{referral.referrerType || "Client"}</span>
+            </p>
           </div>
-        </div>
-        <div>
-          <h3 className="text-sm font-medium text-muted-foreground">Date Received</h3>
-          <p className="text-base">{referral.date}</p>
-        </div>
-        {referral.value && (
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground">Estimated Value</h3>
-            <p className="text-base">${referral.value.toLocaleString()}</p>
+
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">Referral Date</p>
+            <p className="flex items-center">
+              <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+              {referral.date}
+            </p>
           </div>
-        )}
+
+          {referral.value && (
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Estimated Value</p>
+              <p className="flex items-center">
+                <DollarSign className="h-4 w-4 mr-2 text-muted-foreground" />
+                ${referral.value.toLocaleString()}
+              </p>
+            </div>
+          )}
+
+          {referral.referrerEmail && (
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Referrer Email</p>
+              <p className="flex items-center">
+                <Mail className="h-4 w-4 mr-2 text-muted-foreground" />
+                {referral.referrerEmail}
+              </p>
+            </div>
+          )}
+
+          {referral.referrerPhone && (
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Referrer Phone</p>
+              <p className="flex items-center">
+                <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
+                {referral.referrerPhone}
+              </p>
+            </div>
+          )}
+
+          {referral.recipientEmail && (
+            <div className="space-y-1">
+              <p className="text-sm text-muted-foreground">Recipient Email</p>
+              <p className="flex items-center">
+                <Mail className="h-4 w-4 mr-2 text-muted-foreground" />
+                {referral.recipientEmail}
+              </p>
+            </div>
+          )}
+        </div>
+
         {referral.notes && (
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground">Notes</h3>
-            <p className="text-base break-words whitespace-pre-wrap">{referral.notes}</p>
+          <div className="mb-4">
+            <p className="text-sm text-muted-foreground mb-1">Notes</p>
+            <p className="text-sm bg-muted p-3 rounded-md">{referral.notes}</p>
           </div>
         )}
-        <div className="flex flex-wrap justify-end gap-3 pt-4">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">Delete</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the referral for {referral.clientName}.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter className="flex-wrap gap-2">
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+      </div>
+
+      <DialogFooter className="flex justify-between sm:justify-between">
+        <Button variant="destructive" onClick={handleDelete}>
+          Delete
+        </Button>
+        <div className="flex gap-2">
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>
-          <Button onClick={onEdit}>Edit Referral</Button>
+          <Button onClick={onEdit}>Edit</Button>
         </div>
-      </div>
+      </DialogFooter>
     </DialogContent>
   );
 };

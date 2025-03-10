@@ -1,71 +1,87 @@
 
 import React from "react";
-import { DashboardCard } from "../dashboard/DashboardCard";
-import { cn } from "@/lib/utils";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ReferralStatusBadge } from "./ReferralStatusBadge";
+import { formatDate } from "@/lib/utils";
+import { ExternalLink, Mail, Phone, User } from "lucide-react";
 
 export interface Referral {
   id: string;
   clientName: string;
   source: string;
-  status: "new" | "contacted" | "in-progress" | "completed" | "lost";
+  status: 'new' | 'contacted' | 'in-progress' | 'completed' | 'lost';
   date: string;
   value?: number;
   notes?: string;
-  referrerType?: "broker" | "client" | "partner" | "other";
+  referrerType?: 'broker' | 'client' | 'partner' | 'other';
+  referrerEmail?: string;
+  referrerPhone?: string;
+  recipientEmail?: string;
+  isExternal?: boolean;
 }
-
-const statusColors = {
-  "new": "bg-blue-100 text-blue-700",
-  "contacted": "bg-purple-100 text-purple-700",
-  "in-progress": "bg-amber-100 text-amber-700",
-  "completed": "bg-green-100 text-green-700",
-  "lost": "bg-red-100 text-red-700",
-};
 
 interface ReferralCardProps {
   referral: Referral;
-  onClick?: () => void;
+  onClick: () => void;
 }
 
 export const ReferralCard: React.FC<ReferralCardProps> = ({ referral, onClick }) => {
-  const hasValue = referral.value !== undefined && referral.value > 0;
-  
   return (
-    <DashboardCard 
-      className="hover:border-primary cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+    <Card 
+      className="hover:bg-accent/20 transition-colors cursor-pointer animate-fade-in"
       onClick={onClick}
-      tabIndex={0}
-      role="button"
-      aria-label={`View details for ${referral.clientName} referral`}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClick?.();
-        }
-      }}
     >
-      <div className="flex justify-between items-start mb-3 flex-wrap gap-2">
-        <h3 className="font-medium truncate max-w-[calc(100%-5rem)]">{referral.clientName}</h3>
-        <div className={cn("text-xs px-2 py-1 rounded-full whitespace-nowrap", statusColors[referral.status])}>
-          {referral.status.replace('-', ' ')}
+      <CardHeader className="pb-2 flex flex-row justify-between">
+        <div>
+          <h3 className="font-medium text-lg">{referral.clientName}</h3>
+          <p className="text-sm text-muted-foreground">From: {referral.source}</p>
         </div>
-      </div>
-      <div className="text-sm text-muted-foreground mb-3">
-        <span className="inline-block">From: {referral.source}</span>
-        {referral.referrerType && (
-          <span className="ml-2 text-xs bg-gray-100 px-2 py-0.5 rounded-full">
-            {referral.referrerType}
-          </span>
+        <ReferralStatusBadge status={referral.status} />
+      </CardHeader>
+      
+      <CardContent className="pb-2">
+        {referral.isExternal && (
+          <Badge variant="outline" className="mb-2 bg-blue-50 text-blue-700 border-blue-200">
+            <ExternalLink className="h-3 w-3 mr-1" />
+            External Referral
+          </Badge>
         )}
-      </div>
-      {hasValue && (
-        <div className="text-sm mb-2">
-          <span className="inline-block">Potential value: <span className="font-medium">${referral.value.toLocaleString()}</span></span>
+        
+        <div className="space-y-1">
+          {referral.referrerType && (
+            <div className="flex items-center text-sm">
+              <User className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
+              <span className="capitalize">{referral.referrerType}</span>
+            </div>
+          )}
+          
+          {referral.referrerEmail && (
+            <div className="flex items-center text-sm">
+              <Mail className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
+              <span className="text-sm">{referral.referrerEmail}</span>
+            </div>
+          )}
+          
+          {referral.referrerPhone && (
+            <div className="flex items-center text-sm">
+              <Phone className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
+              <span>{referral.referrerPhone}</span>
+            </div>
+          )}
+          
+          {referral.notes && (
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {referral.notes}
+            </p>
+          )}
         </div>
-      )}
-      <div className="text-xs text-muted-foreground">
-        Received: {referral.date}
-      </div>
-    </DashboardCard>
+      </CardContent>
+      
+      <CardFooter className="pt-2 flex justify-between text-sm text-muted-foreground">
+        <span>{referral.date}</span>
+        <span>{referral.value ? `$${referral.value.toLocaleString()}` : "—"}</span>
+      </CardFooter>
+    </Card>
   );
 };

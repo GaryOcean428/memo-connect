@@ -1,150 +1,120 @@
-
-import React, { useState, useEffect } from "react";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { LayoutDashboard, Users, FileText, Menu, X, LogOut, User, DollarSign } from "lucide-react";
+import React from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  HomeIcon,
+  PlusIcon,
+  Settings,
+  LogOut,
+  LinkIcon,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
-const navItems = [{
-  name: "Dashboard",
-  path: "/dashboard",
-  icon: LayoutDashboard
-}, {
-  name: "Referrals",
-  path: "/referrals",
-  icon: FileText
-}, {
-  name: "Clients",
-  path: "/clients",
-  icon: Users
-}, {
-  name: "Finance",
-  path: "/finance",
-  icon: DollarSign
-}];
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+}
 
-export const Navbar: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
-  const {
-    user,
-    signOut
-  } = useAuth();
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-  useEffect(() => {
-    // Close mobile menu on route change
-    setIsMobileMenuOpen(false);
-  }, [location.pathname]);
+export const Navbar = () => {
+  const { user, signOut } = useAuth();
+  const { toast } = useToast();
+
   const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
-  };
-
-  // Get user initials for avatar
-  const getUserInitials = () => {
-    if (!user) return "?";
-
-    // Try to get from metadata first
-    const fullName = user.user_metadata?.full_name;
-    if (fullName) {
-      return fullName.split(" ").map((n: string) => n[0]).join("").toUpperCase().substring(0, 2);
+    try {
+      await signOut();
+      toast({
+        title: "Signed out",
+        description: "You have been signed out successfully",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error signing out",
+        description: error.message,
+        variant: "destructive",
+      });
     }
-
-    // Fallback to email
-    return user.email?.substring(0, 2).toUpperCase() || "?";
   };
-  return <nav className={cn("fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 transition-all duration-300", isScrolled ? "py-3 bg-background/80 backdrop-blur-lg border-b border-border shadow-sm" : "py-5 bg-transparent")}>
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <NavLink to="/" className="text-xl font-semibold flex items-center gap-2 text-primary">
-          <span className="w-14 h-8 rounded-md bg-primary flex items-center justify-center text-white">MCF</span>
-          <span className="hidden sm:inline-block">Memo-Connect Financers</span>
-        </NavLink>
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-1">
-          {navItems.map(item => <NavLink key={item.path} to={item.path} className={({
-          isActive
-        }) => cn("px-4 py-2 rounded-lg flex items-center gap-2 smooth-transition", isActive ? "bg-primary/10 text-primary" : "hover:bg-secondary text-foreground/80 hover:text-foreground")}>
-              <item.icon className="w-4 h-4" />
-              <span>{item.name}</span>
-            </NavLink>)}
-        </div>
+  const navigationItems: NavItem[] = [
+    {
+      href: "/",
+      label: "Dashboard",
+      icon: <HomeIcon className="w-4 h-4" />,
+    },
+    {
+      href: "/referrals",
+      label: "Referrals",
+      icon: <PlusIcon className="w-4 h-4" />,
+    },
+    {
+      href: "/referral-embed",
+      label: "Embed Forms",
+      icon: <LinkIcon className="w-4 h-4" />
+    },
+  ];
 
-        {/* User Menu (Desktop) */}
-        <div className="hidden md:flex items-center">
-          {user ? <DropdownMenu>
+  return (
+    <header className="bg-background border-b sticky top-0 z-50">
+      <div className="container flex h-16 items-center justify-between">
+        <Link to="/" className="font-bold text-2xl">
+          Referral System
+        </Link>
+        <nav className="flex items-center space-x-4">
+          {navigationItems.map((item) => (
+            <Link
+              key={item.href}
+              to={item.href}
+              className="text-sm font-medium hover:underline flex items-center gap-1"
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          ))}
+          {user ? (
+            <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 px-2 py-1 rounded-lg hover:bg-secondary">
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-primary/10 text-primary">
-                      {getUserInitials()}
+                    <AvatarImage src={user.user_metadata?.avatar_url} alt={user.email} />
+                    <AvatarFallback>
+                      {user.email?.charAt(0).toUpperCase()}
+                      {user.email?.charAt(1).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium hidden lg:inline-block">
-                    {user.user_metadata?.full_name || user.email}
-                  </span>
-                </button>
+                </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => navigate("/profile")}>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings">
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sign out</span>
+                  <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu> : <Button variant="ghost" onClick={() => navigate("/auth")} className="rounded-lg">
-              Sign In
-            </Button>}
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 rounded-lg hover:bg-secondary smooth-transition" aria-label="Toggle menu">
-          {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && <div className="absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-border shadow-md mt-1 py-2 md:hidden animate-fade-in">
-            {navItems.map(item => <NavLink key={item.path} to={item.path} className={({
-          isActive
-        }) => cn("px-4 py-3 flex items-center gap-3 smooth-transition", isActive ? "bg-primary/10 text-primary" : "hover:bg-secondary text-foreground/80 hover:text-foreground")}>
-                <item.icon className="w-5 h-5" />
-                <span>{item.name}</span>
-              </NavLink>)}
-            
-            {/* User options for mobile */}
-            {user ? <>
-                <div className="px-4 py-3 flex items-center gap-3 border-t border-border mt-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-primary/10 text-primary">
-                      {getUserInitials()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="font-medium">{user.user_metadata?.full_name || user.email}</span>
-                </div>
-                <button onClick={handleSignOut} className="px-4 py-3 flex items-center gap-3 w-full text-left hover:bg-secondary text-foreground/80 hover:text-foreground">
-                  <LogOut className="w-5 h-5" />
-                  <span>Sign out</span>
-                </button>
-              </> : <button onClick={() => navigate("/auth")} className="px-4 py-3 flex items-center gap-3 w-full text-left hover:bg-secondary text-foreground/80 hover:text-foreground">
-                <User className="w-5 h-5" />
-                <span>Sign in</span>
-              </button>}
-          </div>}
+            </DropdownMenu>
+          ) : (
+            <Link to="/login">
+              <Button>Login</Button>
+            </Link>
+          )}
+        </nav>
       </div>
-    </nav>;
+    </header>
+  );
 };

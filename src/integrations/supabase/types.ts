@@ -42,105 +42,61 @@ export type Database = {
         }
         Relationships: []
       }
-      clients: {
+      admin_users: {
         Row: {
-          address: string | null
-          city: string | null
           created_at: string
           email: string | null
           id: string
-          name: string
-          notes: string | null
-          phone: string | null
-          postal_code: string | null
-          state: string | null
-          status: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
-          address?: string | null
-          city?: string | null
           created_at?: string
           email?: string | null
           id?: string
-          name: string
-          notes?: string | null
-          phone?: string | null
-          postal_code?: string | null
-          state?: string | null
-          status?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
-          address?: string | null
-          city?: string | null
           created_at?: string
           email?: string | null
           id?: string
-          name?: string
-          notes?: string | null
-          phone?: string | null
-          postal_code?: string | null
-          state?: string | null
-          status?: string | null
           updated_at?: string
           user_id?: string
         }
         Relationships: []
       }
-      commissions: {
+      clients: {
         Row: {
           created_at: string
-          finance_arrangement_id: string
+          email: string
           id: string
-          notes: string | null
-          status: string | null
-          trail_amount: number | null
-          trail_percentage: number | null
+          name: string
+          phone: string | null
+          service_type: string | null
           updated_at: string
-          upfront_amount: number | null
-          upfront_payment_date: string | null
-          user_id: string
         }
         Insert: {
           created_at?: string
-          finance_arrangement_id: string
+          email: string
           id?: string
-          notes?: string | null
-          status?: string | null
-          trail_amount?: number | null
-          trail_percentage?: number | null
+          name: string
+          phone?: string | null
+          service_type?: string | null
           updated_at?: string
-          upfront_amount?: number | null
-          upfront_payment_date?: string | null
-          user_id: string
         }
         Update: {
           created_at?: string
-          finance_arrangement_id?: string
+          email?: string
           id?: string
-          notes?: string | null
-          status?: string | null
-          trail_amount?: number | null
-          trail_percentage?: number | null
+          name?: string
+          phone?: string | null
+          service_type?: string | null
           updated_at?: string
-          upfront_amount?: number | null
-          upfront_payment_date?: string | null
-          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "commissions_finance_arrangement_id_fkey"
-            columns: ["finance_arrangement_id"]
-            isOneToOne: false
-            referencedRelation: "finance_arrangements"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      competency_assessment: {
+      CompetencyAssessment: {
         Row: {
           assessment_date: string | null
           assessor_name: string | null
@@ -168,7 +124,7 @@ export type Database = {
           result?: string | null
           status: string
           training_contract_id: string
-          updated_at?: string
+          updated_at: string
           user_id: string
         }
         Update: {
@@ -188,29 +144,29 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "competency_assessment_competency_fkey"
+            foreignKeyName: "CompetencyAssessment_competency_unit_id_fkey"
             columns: ["competency_unit_id"]
             isOneToOne: false
-            referencedRelation: "competency_unit"
+            referencedRelation: "CompetencyUnit"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "competency_assessment_contract_fkey"
+            foreignKeyName: "CompetencyAssessment_training_contract_id_fkey"
             columns: ["training_contract_id"]
             isOneToOne: false
             referencedRelation: "TrainingContract"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "competency_assessment_user_fkey"
+            foreignKeyName: "CompetencyAssessment_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "User"
+            referencedRelation: "Employee"
             referencedColumns: ["id"]
           },
         ]
       }
-      competency_unit: {
+      CompetencyUnit: {
         Row: {
           created_at: string
           description: string | null
@@ -235,7 +191,7 @@ export type Database = {
           unit_code: string
           unit_name: string
           unit_type: string
-          updated_at?: string
+          updated_at: string
         }
         Update: {
           created_at?: string
@@ -252,13 +208,73 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "competency_unit_qualification_fkey"
+            foreignKeyName: "CompetencyUnit_qualification_id_fkey"
             columns: ["qualification_id"]
             isOneToOne: false
             referencedRelation: "Qualification"
             referencedColumns: ["id"]
           },
         ]
+      }
+      content_blocks: {
+        Row: {
+          content: Json
+          created_at: string
+          id: string
+          name: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          content: Json
+          created_at?: string
+          id?: string
+          name: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          id?: string
+          name?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      content_pages: {
+        Row: {
+          content: Json
+          created_at: string
+          id: string
+          is_published: boolean
+          meta_description: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: Json
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          meta_description?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          meta_description?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       Customer: {
         Row: {
@@ -272,19 +288,19 @@ export type Database = {
           name: string
           notes: string | null
           phone: string | null
-          previous_apprentice_count: number | null
+          previous_apprentice_count: number
           professional_indemnity_expiry: string | null
           professional_indemnity_insurance: string | null
           public_liability_expiry: string | null
           public_liability_insurance: string | null
-          suitable_for_first_years: boolean | null
+          suitable_for_first_years: boolean
           supervision_ratio: string | null
           supervisor_qualifications: Json | null
           updated_at: string
           updated_by: string
           work_cover_expiry_date: string | null
           work_cover_policy_number: string | null
-          workplace_health_safety_policy: boolean | null
+          workplace_health_safety_policy: boolean
           workplace_induction_process: string | null
         }
         Insert: {
@@ -298,19 +314,19 @@ export type Database = {
           name: string
           notes?: string | null
           phone?: string | null
-          previous_apprentice_count?: number | null
+          previous_apprentice_count?: number
           professional_indemnity_expiry?: string | null
           professional_indemnity_insurance?: string | null
           public_liability_expiry?: string | null
           public_liability_insurance?: string | null
-          suitable_for_first_years?: boolean | null
+          suitable_for_first_years?: boolean
           supervision_ratio?: string | null
           supervisor_qualifications?: Json | null
           updated_at: string
           updated_by: string
           work_cover_expiry_date?: string | null
           work_cover_policy_number?: string | null
-          workplace_health_safety_policy?: boolean | null
+          workplace_health_safety_policy?: boolean
           workplace_induction_process?: string | null
         }
         Update: {
@@ -324,19 +340,19 @@ export type Database = {
           name?: string
           notes?: string | null
           phone?: string | null
-          previous_apprentice_count?: number | null
+          previous_apprentice_count?: number
           professional_indemnity_expiry?: string | null
           professional_indemnity_insurance?: string | null
           public_liability_expiry?: string | null
           public_liability_insurance?: string | null
-          suitable_for_first_years?: boolean | null
+          suitable_for_first_years?: boolean
           supervision_ratio?: string | null
           supervisor_qualifications?: Json | null
           updated_at?: string
           updated_by?: string
           work_cover_expiry_date?: string | null
           work_cover_policy_number?: string | null
-          workplace_health_safety_policy?: boolean | null
+          workplace_health_safety_policy?: boolean
           workplace_induction_process?: string | null
         }
         Relationships: []
@@ -407,125 +423,134 @@ export type Database = {
         }
         Relationships: []
       }
-      finance_arrangements: {
+      Employee: {
         Row: {
-          application_date: string | null
-          client_id: string
           created_at: string
+          disability_details: string | null
+          email: string
+          employee_type: string | null
+          employment_history: Json | null
+          english_proficiency: string | null
+          funding_eligibility: Json | null
           id: string
-          lender: string | null
-          loan_amount: number | null
-          loan_type: string | null
-          notes: string | null
-          referral_id: string | null
-          settlement_date: string | null
-          status: string | null
+          name: string | null
+          numeracy_level: string | null
+          preferred_industry: string[] | null
+          prior_qualifications: string[] | null
+          relocation_willing: boolean
+          support_requirements: string | null
           updated_at: string
-          user_id: string
+          visa_expiry: string | null
+          visa_status: string | null
+          white_card_expiry: string | null
+          white_card_number: string | null
         }
         Insert: {
-          application_date?: string | null
-          client_id: string
           created_at?: string
-          id?: string
-          lender?: string | null
-          loan_amount?: number | null
-          loan_type?: string | null
-          notes?: string | null
-          referral_id?: string | null
-          settlement_date?: string | null
-          status?: string | null
-          updated_at?: string
-          user_id: string
+          disability_details?: string | null
+          email: string
+          employee_type?: string | null
+          employment_history?: Json | null
+          english_proficiency?: string | null
+          funding_eligibility?: Json | null
+          id: string
+          name?: string | null
+          numeracy_level?: string | null
+          preferred_industry?: string[] | null
+          prior_qualifications?: string[] | null
+          relocation_willing?: boolean
+          support_requirements?: string | null
+          updated_at: string
+          visa_expiry?: string | null
+          visa_status?: string | null
+          white_card_expiry?: string | null
+          white_card_number?: string | null
         }
         Update: {
-          application_date?: string | null
-          client_id?: string
           created_at?: string
+          disability_details?: string | null
+          email?: string
+          employee_type?: string | null
+          employment_history?: Json | null
+          english_proficiency?: string | null
+          funding_eligibility?: Json | null
           id?: string
-          lender?: string | null
-          loan_amount?: number | null
-          loan_type?: string | null
-          notes?: string | null
-          referral_id?: string | null
-          settlement_date?: string | null
-          status?: string | null
+          name?: string | null
+          numeracy_level?: string | null
+          preferred_industry?: string[] | null
+          prior_qualifications?: string[] | null
+          relocation_willing?: boolean
+          support_requirements?: string | null
           updated_at?: string
-          user_id?: string
+          visa_expiry?: string | null
+          visa_status?: string | null
+          white_card_expiry?: string | null
+          white_card_number?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "finance_arrangements_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "clients"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "finance_arrangements_referral_id_fkey"
-            columns: ["referral_id"]
-            isOneToOne: false
-            referencedRelation: "referrals"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      incentives: {
+      leads: {
         Row: {
-          amount: number | null
-          client_id: string | null
+          company: string | null
           created_at: string
-          delivery_date: string | null
+          email: string
           id: string
-          notes: string | null
-          referral_id: string | null
-          status: string | null
-          type: string | null
+          name: string
+          phone: string | null
+          service_type: string | null
           updated_at: string
-          user_id: string
         }
         Insert: {
-          amount?: number | null
-          client_id?: string | null
+          company?: string | null
           created_at?: string
-          delivery_date?: string | null
+          email: string
           id?: string
-          notes?: string | null
-          referral_id?: string | null
-          status?: string | null
-          type?: string | null
+          name: string
+          phone?: string | null
+          service_type?: string | null
           updated_at?: string
-          user_id: string
         }
         Update: {
-          amount?: number | null
-          client_id?: string | null
+          company?: string | null
           created_at?: string
-          delivery_date?: string | null
+          email?: string
           id?: string
-          notes?: string | null
-          referral_id?: string | null
-          status?: string | null
-          type?: string | null
+          name?: string
+          phone?: string | null
+          service_type?: string | null
           updated_at?: string
-          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "incentives_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "clients"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "incentives_referral_id_fkey"
-            columns: ["referral_id"]
-            isOneToOne: false
-            referencedRelation: "referrals"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
+      }
+      media: {
+        Row: {
+          created_at: string
+          file_path: string
+          file_type: string | null
+          id: string
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          file_path: string
+          file_type?: string | null
+          id?: string
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          file_path?: string
+          file_type?: string | null
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
       notes: {
         Row: {
@@ -629,111 +654,170 @@ export type Database = {
         }
         Relationships: []
       }
-      referrals: {
-        Row: {
-          client_name: string
-          created_at: string
-          date: string
-          id: string
-          notes: string | null
-          referrer_id: string | null
-          referrer_type: string | null
-          source: string
-          status: string
-          updated_at: string
-          user_id: string
-          value: number | null
-        }
-        Insert: {
-          client_name: string
-          created_at?: string
-          date?: string
-          id?: string
-          notes?: string | null
-          referrer_id?: string | null
-          referrer_type?: string | null
-          source: string
-          status: string
-          updated_at?: string
-          user_id: string
-          value?: number | null
-        }
-        Update: {
-          client_name?: string
-          created_at?: string
-          date?: string
-          id?: string
-          notes?: string | null
-          referrer_id?: string | null
-          referrer_type?: string | null
-          source?: string
-          status?: string
-          updated_at?: string
-          user_id?: string
-          value?: number | null
-        }
-        Relationships: []
-      }
-      support_contact: {
+      SupportContact: {
         Row: {
           action_items: string[] | null
           contact_date: string
           contact_type: string
           created_at: string
-          employer_present: boolean | null
+          employer_present: boolean
           follow_up_date: string | null
-          follow_up_required: boolean | null
+          follow_up_required: boolean
           id: string
           notes: string | null
           staff_name: string
-          training_discussion: boolean | null
+          training_discussion: boolean
           updated_at: string
           user_id: string
-          wellbeing_discussion: boolean | null
+          wellbeing_discussion: boolean
         }
         Insert: {
           action_items?: string[] | null
           contact_date: string
           contact_type: string
           created_at?: string
-          employer_present?: boolean | null
+          employer_present?: boolean
           follow_up_date?: string | null
-          follow_up_required?: boolean | null
+          follow_up_required?: boolean
           id?: string
           notes?: string | null
           staff_name: string
-          training_discussion?: boolean | null
-          updated_at?: string
+          training_discussion?: boolean
+          updated_at: string
           user_id: string
-          wellbeing_discussion?: boolean | null
+          wellbeing_discussion?: boolean
         }
         Update: {
           action_items?: string[] | null
           contact_date?: string
           contact_type?: string
           created_at?: string
-          employer_present?: boolean | null
+          employer_present?: boolean
           follow_up_date?: string | null
-          follow_up_required?: boolean | null
+          follow_up_required?: boolean
           id?: string
           notes?: string | null
           staff_name?: string
-          training_discussion?: boolean | null
+          training_discussion?: boolean
           updated_at?: string
           user_id?: string
-          wellbeing_discussion?: boolean | null
+          wellbeing_discussion?: boolean
         }
         Relationships: [
           {
-            foreignKeyName: "support_contact_user_fkey"
+            foreignKeyName: "SupportContact_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "User"
+            referencedRelation: "Employee"
             referencedColumns: ["id"]
           },
         ]
       }
-      training_plan_review: {
+      TrainingContract: {
+        Row: {
+          contract_identifier: string | null
+          created_at: string
+          eligibleForFunding: boolean
+          expiryDate: string
+          federal_funded: boolean
+          fee_payment_schedule: Json | null
+          funding_source_details: string | null
+          hoursPerWeek: number
+          id: string
+          isCustodial: boolean
+          isExistingWorker: boolean
+          isSchoolBased: boolean
+          mentorship_details: Json | null
+          nomination_number: string | null
+          probation_completion_confirmed: boolean
+          qualificationId: string | null
+          required_resources: string[] | null
+          startDate: string
+          state_funded: boolean
+          state_training_authority: string | null
+          status: string
+          termMonths: number
+          training_fee: number | null
+          training_plan_approval_date: string | null
+          training_plan_approved: boolean
+          updated_at: string
+          variation_history: Json | null
+          worksite: string | null
+          worksiteAddress: string | null
+        }
+        Insert: {
+          contract_identifier?: string | null
+          created_at?: string
+          eligibleForFunding: boolean
+          expiryDate: string
+          federal_funded?: boolean
+          fee_payment_schedule?: Json | null
+          funding_source_details?: string | null
+          hoursPerWeek: number
+          id?: string
+          isCustodial: boolean
+          isExistingWorker: boolean
+          isSchoolBased: boolean
+          mentorship_details?: Json | null
+          nomination_number?: string | null
+          probation_completion_confirmed?: boolean
+          qualificationId?: string | null
+          required_resources?: string[] | null
+          startDate: string
+          state_funded?: boolean
+          state_training_authority?: string | null
+          status: string
+          termMonths: number
+          training_fee?: number | null
+          training_plan_approval_date?: string | null
+          training_plan_approved?: boolean
+          updated_at?: string
+          variation_history?: Json | null
+          worksite?: string | null
+          worksiteAddress?: string | null
+        }
+        Update: {
+          contract_identifier?: string | null
+          created_at?: string
+          eligibleForFunding?: boolean
+          expiryDate?: string
+          federal_funded?: boolean
+          fee_payment_schedule?: Json | null
+          funding_source_details?: string | null
+          hoursPerWeek?: number
+          id?: string
+          isCustodial?: boolean
+          isExistingWorker?: boolean
+          isSchoolBased?: boolean
+          mentorship_details?: Json | null
+          nomination_number?: string | null
+          probation_completion_confirmed?: boolean
+          qualificationId?: string | null
+          required_resources?: string[] | null
+          startDate?: string
+          state_funded?: boolean
+          state_training_authority?: string | null
+          status?: string
+          termMonths?: number
+          training_fee?: number | null
+          training_plan_approval_date?: string | null
+          training_plan_approved?: boolean
+          updated_at?: string
+          variation_history?: Json | null
+          worksite?: string | null
+          worksiteAddress?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "TrainingContract_qualificationId_fkey"
+            columns: ["qualificationId"]
+            isOneToOne: false
+            referencedRelation: "Qualification"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      TrainingPlanReview: {
         Row: {
           action_items: string[] | null
           apprentice_feedback: string | null
@@ -766,7 +850,7 @@ export type Database = {
           reviewer_name: string
           status: string
           training_contract_id: string
-          updated_at?: string
+          updated_at: string
         }
         Update: {
           action_items?: string[] | null
@@ -787,180 +871,13 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "training_plan_review_contract_fkey"
+            foreignKeyName: "TrainingPlanReview_training_contract_id_fkey"
             columns: ["training_contract_id"]
             isOneToOne: false
             referencedRelation: "TrainingContract"
             referencedColumns: ["id"]
           },
         ]
-      }
-      TrainingContract: {
-        Row: {
-          contract_identifier: string | null
-          created_at: string
-          eligibleForFunding: boolean
-          expiryDate: string
-          federal_funded: boolean | null
-          fee_payment_schedule: Json | null
-          funding_source_details: string | null
-          hoursPerWeek: number
-          id: string
-          isCustodial: boolean
-          isExistingWorker: boolean
-          isSchoolBased: boolean
-          mentorship_details: Json | null
-          nomination_number: string | null
-          probation_completion_confirmed: boolean | null
-          qualificationId: string | null
-          required_resources: string[] | null
-          startDate: string
-          state_funded: boolean | null
-          state_training_authority: string | null
-          status: string
-          termMonths: number
-          training_fee: number | null
-          training_plan_approval_date: string | null
-          training_plan_approved: boolean | null
-          updated_at: string
-          variation_history: Json | null
-          worksite: string | null
-          worksiteAddress: string | null
-        }
-        Insert: {
-          contract_identifier?: string | null
-          created_at?: string
-          eligibleForFunding: boolean
-          expiryDate: string
-          federal_funded?: boolean | null
-          fee_payment_schedule?: Json | null
-          funding_source_details?: string | null
-          hoursPerWeek: number
-          id?: string
-          isCustodial: boolean
-          isExistingWorker: boolean
-          isSchoolBased: boolean
-          mentorship_details?: Json | null
-          nomination_number?: string | null
-          probation_completion_confirmed?: boolean | null
-          qualificationId?: string | null
-          required_resources?: string[] | null
-          startDate: string
-          state_funded?: boolean | null
-          state_training_authority?: string | null
-          status: string
-          termMonths: number
-          training_fee?: number | null
-          training_plan_approval_date?: string | null
-          training_plan_approved?: boolean | null
-          updated_at?: string
-          variation_history?: Json | null
-          worksite?: string | null
-          worksiteAddress?: string | null
-        }
-        Update: {
-          contract_identifier?: string | null
-          created_at?: string
-          eligibleForFunding?: boolean
-          expiryDate?: string
-          federal_funded?: boolean | null
-          fee_payment_schedule?: Json | null
-          funding_source_details?: string | null
-          hoursPerWeek?: number
-          id?: string
-          isCustodial?: boolean
-          isExistingWorker?: boolean
-          isSchoolBased?: boolean
-          mentorship_details?: Json | null
-          nomination_number?: string | null
-          probation_completion_confirmed?: boolean | null
-          qualificationId?: string | null
-          required_resources?: string[] | null
-          startDate?: string
-          state_funded?: boolean | null
-          state_training_authority?: string | null
-          status?: string
-          termMonths?: number
-          training_fee?: number | null
-          training_plan_approval_date?: string | null
-          training_plan_approved?: boolean | null
-          updated_at?: string
-          variation_history?: Json | null
-          worksite?: string | null
-          worksiteAddress?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "TrainingContract_qualificationId_fkey"
-            columns: ["qualificationId"]
-            isOneToOne: false
-            referencedRelation: "Qualification"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      User: {
-        Row: {
-          blue_card_expiry: string | null
-          blue_card_number: string | null
-          created_at: string
-          disability_details: string | null
-          email: string
-          employment_history: Json | null
-          english_proficiency: string | null
-          funding_eligibility: Json | null
-          id: string
-          name: string | null
-          numeracy_level: string | null
-          preferred_industry: string[] | null
-          prior_qualifications: string[] | null
-          relocation_willing: boolean | null
-          support_requirements: string | null
-          updated_at: string
-          visa_expiry: string | null
-          visa_status: string | null
-        }
-        Insert: {
-          blue_card_expiry?: string | null
-          blue_card_number?: string | null
-          created_at?: string
-          disability_details?: string | null
-          email: string
-          employment_history?: Json | null
-          english_proficiency?: string | null
-          funding_eligibility?: Json | null
-          id: string
-          name?: string | null
-          numeracy_level?: string | null
-          preferred_industry?: string[] | null
-          prior_qualifications?: string[] | null
-          relocation_willing?: boolean | null
-          support_requirements?: string | null
-          updated_at: string
-          visa_expiry?: string | null
-          visa_status?: string | null
-        }
-        Update: {
-          blue_card_expiry?: string | null
-          blue_card_number?: string | null
-          created_at?: string
-          disability_details?: string | null
-          email?: string
-          employment_history?: Json | null
-          english_proficiency?: string | null
-          funding_eligibility?: Json | null
-          id?: string
-          name?: string | null
-          numeracy_level?: string | null
-          preferred_industry?: string[] | null
-          prior_qualifications?: string[] | null
-          relocation_willing?: boolean | null
-          support_requirements?: string | null
-          updated_at?: string
-          visa_expiry?: string | null
-          visa_status?: string | null
-        }
-        Relationships: []
       }
       user_organizations: {
         Row: {
@@ -1021,14 +938,14 @@ export type Database = {
         }
         Relationships: []
       }
-      workplace_inspection: {
+      WorkplaceInspection: {
         Row: {
           attachments: string[] | null
           created_at: string
           customer_id: string
           findings: string | null
           follow_up_date: string | null
-          follow_up_required: boolean | null
+          follow_up_required: boolean
           id: string
           inspection_date: string
           inspector_name: string
@@ -1043,14 +960,14 @@ export type Database = {
           customer_id: string
           findings?: string | null
           follow_up_date?: string | null
-          follow_up_required?: boolean | null
+          follow_up_required?: boolean
           id?: string
           inspection_date: string
           inspector_name: string
           recommendations?: string | null
           safety_rating?: number | null
           status: string
-          updated_at?: string
+          updated_at: string
         }
         Update: {
           attachments?: string[] | null
@@ -1058,7 +975,7 @@ export type Database = {
           customer_id?: string
           findings?: string | null
           follow_up_date?: string | null
-          follow_up_required?: boolean | null
+          follow_up_required?: boolean
           id?: string
           inspection_date?: string
           inspector_name?: string
@@ -1069,7 +986,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "workplace_inspection_customer_fkey"
+            foreignKeyName: "WorkplaceInspection_customer_id_fkey"
             columns: ["customer_id"]
             isOneToOne: false
             referencedRelation: "Customer"
@@ -1093,6 +1010,20 @@ export type Database = {
             }
             Returns: undefined
           }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_admin_user: {
+        Args: {
+          user_uuid: string
+        }
+        Returns: boolean
+      }
+      is_braden_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
