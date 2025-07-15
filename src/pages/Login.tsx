@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { BlurBackground } from '@/components/ui/BlurBackground';
+import { getErrorMessage } from '@/types/error';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -30,8 +31,8 @@ const Login = () => {
         await signIn(email, password);
         navigate('/dashboard');
       }
-    } catch (error: any) {
-      setError(error.message || 'An error occurred during authentication');
+    } catch (error: unknown) {
+      setError(getErrorMessage(error));
     } finally {
       setIsLoading(false);
     }

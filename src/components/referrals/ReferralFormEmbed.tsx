@@ -11,7 +11,7 @@ interface ReferralFormEmbedProps {
   title?: string;
   description?: string;
   onSuccess?: () => void;
-  onError?: (error: any) => void;
+  onError?: (error: Error) => void;
 }
 
 export const ReferralFormEmbed: React.FC<ReferralFormEmbedProps> = ({
@@ -38,7 +38,7 @@ export const ReferralFormEmbed: React.FC<ReferralFormEmbedProps> = ({
     }
   };
 
-  const handleError = (error: any) => {
+  const handleError = (error: Error) => {
     setIsSubmitting(false);
     toast({
       title: "Error submitting referral",
