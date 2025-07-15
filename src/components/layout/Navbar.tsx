@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/types/error";
 
 interface NavItem {
   href: string;
@@ -37,10 +38,10 @@ export const Navbar = () => {
         title: "Signed out",
         description: "You have been signed out successfully",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: "Error signing out",
-        description: error.message,
+        description: getErrorMessage(error),
         variant: "destructive",
       });
     }
